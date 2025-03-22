@@ -1,0 +1,41 @@
+.navbar {
+  padding: 0 1rem;
+}
+.logo {
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+}
+
+.navbar-brand {
+  margin-top: 1rem;
+}
+
+.nav-link {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: black;
+  font-size: 1rem;
+  line-height: 24px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  transition: color 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.active {
+  border-bottom: 2px solid #01589a;
+}
+
+@media (max-width: 991px) {
+  .active {
+    border-bottom: 0;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar {
+    padding: 1.5rem 2.5rem;
+  }
+}
