@@ -14,7 +14,7 @@ export default {
     extend: {
       colors: {
         "custom-blue-start": "#01589A",
-        "custom-blue-end": "#13A3DF",
+        "custom-blue-end": "#009CDE",
       },
     },
   },
