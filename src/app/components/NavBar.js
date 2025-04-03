@@ -12,10 +12,13 @@ import {
   User,
 } from "lucide-react";
 import "../styles/navbar.css";
+import { useCart } from "../context/CartContext";
+import { Badge } from "@/components/ui/badge";
 
 function NavBar() {
   const [active, setActive] = useState("home");
   const router = useRouter();
+  const { cart, wishlist } = useCart();
 
   const handleNavClick = (navItem, route) => {
     setActive(navItem);
@@ -62,6 +65,11 @@ function NavBar() {
                 >
                   <ShoppingCart />
                   Cart
+                  {cart.length > 0 && (
+                    <Badge className="bg-[#01589A] py-1 px-2">
+                      {cart.length}
+                    </Badge>
+                  )}
                 </Nav.Link>
                 <Nav.Link
                   className={`nav-link ${
@@ -71,6 +79,12 @@ function NavBar() {
                 >
                   <Heart />
                   Favorite
+                  {wishlist.length > 0 && (
+                    <Badge className="bg-[#01589A] py-1 px-2">
+                      {" "}
+                      {wishlist.length}
+                    </Badge>
+                  )}
                 </Nav.Link>
               </Nav>
               <Nav className="justify-content-end flex-grow-1 pe-3 gap-3 mt-3 mt-lg-0">

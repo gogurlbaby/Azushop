@@ -23,19 +23,19 @@ function Hero() {
 
   const slides = [
     {
-      image: "/images/hero.svg",
+      image: "/images/hero1.svg",
       title: "Next-Gen Mobility",
       description:
         "Power, performance, and style—experience the future of smartphones today.",
     },
     {
-      image: "/images/hero1.svg",
+      image: "/images/hero2.svg",
       title: "Power Meets Portability",
       description:
         "Unmatched performance and sleek design—built for work and play.",
     },
     {
-      image: "/images/hero.svg",
+      image: "/images/hero3.svg",
       title: "Capture Every Moment",
       description:
         "Experience exceptional clarity and precision with our new high-performance cameras.",
@@ -69,7 +69,7 @@ function Hero() {
                     {slide.description}
                   </p>
                   <button
-                    className="flex gap-4 justify-center items-center bg-white border border-solid border-white hover:bg-blue-700 text-black font-medium"
+                    className="flex gap-2 justify-center items-center bg-white border border-solid border-white hover:bg-blue-700 text-black font-medium"
                     style={{ padding: "0.8rem", borderRadius: "4px" }}
                   >
                     Shop Now

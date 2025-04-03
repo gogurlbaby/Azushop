@@ -1,12 +1,12 @@
 import Features from "./(home)/Features";
 import Hero from "./(home)/Hero";
-import Products from "./(home)/Products";
+import TrendingProducts from "./(home)/TrendingProducts";
 
 export default function Home() {
   return (
     <div>
       <Hero />
-      <Products />
+      <TrendingProducts />
       <Features />
     </div>
   );

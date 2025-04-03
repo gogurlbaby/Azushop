@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Banner from "../components/Banner";
 import {
   Breadcrumb,
@@ -20,8 +22,15 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { ShoppingCart, Heart, Eye } from "lucide-react";
 import productsData from "../json/products.json";
+import { useCart } from "../context/CartContext";
 
 function Shop() {
+  const { addToCart, toggleWishlist } = useCart();
+
+  const viewProduct = (product) => {
+    alert(`Viewing details for ${product.title}`);
+  };
+
   return (
     <div>
       <Banner
@@ -152,14 +161,28 @@ function Shop() {
                 <p className="font-normal">{product.description}</p>
                 <span
                   className="text-[#01589A] font-semibold"
-                  style={{ marginBottom: "2rem" }}
+                  style={{ marginBottom: "1rem" }}
                 >
                   ${product.price}
                 </span>
                 <div className="flex gap-2" style={{ marginTop: "2rem" }}>
-                  <ShoppingCart className="text-black" />
-                  <Heart className="text-black" />
-                  <Eye className="text-black" />
+                  <ShoppingCart
+                    className="cursor-pointer hover:text-blue-700"
+                    onClick={() => addToCart(product)}
+                  />
+                  <Heart
+                    // className={`cursor-pointer ${
+                    //   wishlist.some((item) => item.id === product.id)
+                    //     ? "text-red-500"
+                    //     : "text-black"
+                    // }`}
+                    className="cursor-pointer hover:text-red-500"
+                    onClick={() => toggleWishlist(product.id)}
+                  />
+                  <Eye
+                    className="cursor-pointer  hover:text-green-600"
+                    onClick={() => viewProduct(product)}
+                  />
                 </div>
               </div>
             ))}

@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
 
-function Products() {
+function TrendingProducts() {
   return (
     <div className="bg-white" style={{ padding: "6.25rem 1.5rem" }}>
       <p
@@ -111,4 +111,4 @@ function Products() {
   );
 }
 
-export default Products;
+export default TrendingProducts;
