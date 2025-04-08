@@ -2,6 +2,7 @@
   {
     "id": 0,
     "brand": "Apple",
+    "category": "Laptops",
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
@@ -9,42 +10,47 @@
   },
   {
     "id": 1,
-    "brand": "Apple",
+    "brand": "Samsung",
+    "category": "Phones",
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "749.99"
+    "price": "349.99"
   },
   {
     "id": 2,
-    "brand": "Apple",
+    "brand": "Lenovo",
+    "category": "Cameras",
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "749.99"
+    "price": "249.99"
   },
   {
     "id": 3,
-    "brand": "Apple",
+    "brand": "Sony",
+    "category": "Watches",
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "749.99"
+    "price": "500.99"
   },
   {
     "id": 4,
     "brand": "Apple",
+    "category": "Cameras",
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "749.99"
+    "price": "100.00"
   },
   {
     "id": 5,
     "brand": "Apple",
+    "category": "Laptops",
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "749.99"
+    "price": "1000.00"
   }
 ]

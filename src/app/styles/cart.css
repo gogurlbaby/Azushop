@@ -1,0 +1,9 @@
+.cart-container {
+  padding: 2.188rem 1rem 25.25rem;
+}
+
+@media (min-width: 992px) {
+  .cart-container {
+    padding: 2.188rem 9.688rem 25.25rem;
+  }
+}

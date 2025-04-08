@@ -21,14 +21,46 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ShoppingCart, Heart, Eye } from "lucide-react";
-import productsData from "../json/products.json";
+import products from "../json/products.json";
+import categories from "@/app/json/productCategories.json";
+import brands from "@/app/json/productBrands.json";
 import { useCart } from "../context/CartContext";
+import { useRouter } from "next/navigation";
 
 function Shop() {
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState([]);
+  const [brandSelectOpen, setBrandSelectOpen] = useState(false);
+  const [price, setPrice] = useState("");
   const { addToCart, toggleWishlist } = useCart();
+  const router = useRouter();
+
+  const filteredProducts = products.filter((product) => {
+    const parsedPrice = parseFloat(price);
+    return (
+      (selectedCategory ? product.category === selectedCategory : true) &&
+      (selectedBrand.length > 0
+        ? selectedBrand.includes(product.brand)
+        : true) &&
+      (price && !isNaN(parsedPrice) ? product.price >= parsedPrice : true)
+    );
+  });
+
+  const handlePriceChange = (e) => {
+    const value = e.target.value;
+    if (value === "" || !isNaN(value)) {
+      setPrice(value);
+    }
+  };
+
+  const handleReset = () => {
+    setSelectedCategory("");
+    setSelectedBrand([]);
+    setPrice("");
+  };
 
   const viewProduct = (product) => {
-    alert(`Viewing details for ${product.title}`);
+    router.push(`/shop/details/${product.id}`);
   };
 
   return (
@@ -67,16 +99,21 @@ function Shop() {
             <div className="">
               <p>Shop By</p>
               <div>
-                <Select>
+                <Select
+                  onValueChange={(value) => setSelectedCategory(value)}
+                  value={selectedCategory}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Product Categories" />
                   </SelectTrigger>
+
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="apple">Laptops</SelectItem>
-                      <SelectItem value="banana">Phones</SelectItem>
-                      <SelectItem value="blueberry">Cameras</SelectItem>
-                      <SelectItem value="grapes">Watches</SelectItem>
+                      {categories.map((cat, idx) => (
+                        <SelectItem key={idx} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -87,29 +124,41 @@ function Shop() {
 
             <div className="">
               <p>Brand</p>
-              <Select>
+              <Select open={brandSelectOpen} onOpenChange={setBrandSelectOpen}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Brand" />
                 </SelectTrigger>
 
-                <SelectContent>
+                <SelectContent className="max-h-64 overflow-y-auto">
                   <SelectGroup>
-                    <div className="flex gap-1.5 items-center">
-                      <Checkbox id="brand1" />
-                      <label>Apple</label>
-                    </div>
-                    <div className="flex gap-1.5 items-center">
-                      <Checkbox id="brand2" />
-                      <label>Samsung</label>
-                    </div>
-                    <div className="flex gap-1.5 items-center">
-                      <Checkbox id="brand3" />
-                      <label>Lenovo</label>
-                    </div>
-                    <div className="flex gap-1.5 items-center">
-                      <Checkbox id="brand4" />
-                      <label>Sony</label>
-                    </div>
+                    {brands.map((brand, idx) => {
+                      const isChecked = selectedBrand.includes(brand);
+                      return (
+                        <div
+                          key={idx}
+                          className="flex items-center gap-2 px-3 py-1 cursor-pointer"
+                          onClick={(e) => {
+                            // Prevent select from closing
+                            e.stopPropagation();
+                            if (isChecked) {
+                              setSelectedBrand((prev) =>
+                                prev.filter((b) => b !== brand)
+                              );
+                            } else {
+                              setSelectedBrand((prev) => [...prev, brand]);
+                            }
+                          }}
+                        >
+                          <Checkbox id={`brand-${idx}`} checked={isChecked} />
+                          <label
+                            htmlFor={`brand-${idx}`}
+                            className="text-sm font-normal"
+                          >
+                            {brand}
+                          </label>
+                        </div>
+                      );
+                    })}
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -122,11 +171,14 @@ function Shop() {
               <input
                 type="text"
                 id="price"
+                value={price}
+                onChange={handlePriceChange}
                 placeholder="Enter price"
                 className="bg-[#E6EFF5] w-full rounded-md py-2 px-8 border border-solid border-[#E6EFF5]"
                 style={{ marginBottom: "2rem" }}
               />
               <button
+                onClick={handleReset}
                 style={{ borderRadius: "5px" }}
                 className="bg-[#01589A] w-full py-2 px-8 border border-solid border-[#01589A] font-semibold font-sans text-lg text-white flex justify-center items-center"
               >
@@ -140,7 +192,7 @@ function Shop() {
             className="lg:grid-cols-3 grid grid-cols-1 gap-8"
             style={{ paddingTop: "6.875rem" }}
           >
-            {productsData.map((product) => (
+            {filteredProducts.map((product) => (
               <div
                 className="bg-[#F9FBFC] flex justify-center flex-col items-center rounded-lg border border-solid: border-[#F9FBFC]"
                 style={{ padding: "0.5rem 1rem 1.5rem" }}
@@ -177,7 +229,7 @@ function Shop() {
                     //     : "text-black"
                     // }`}
                     className="cursor-pointer hover:text-red-500"
-                    onClick={() => toggleWishlist(product.id)}
+                    onClick={() => toggleWishlist(product)}
                   />
                   <Eye
                     className="cursor-pointer  hover:text-green-600"

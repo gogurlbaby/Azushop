@@ -24,6 +24,11 @@ function NavBar() {
     setActive(navItem);
     router.push(route);
   };
+
+  const handleViewDetails = (productId) => {
+    router.push(`/shop/details/${productId}`);
+  };
+
   return (
     <div>
       <Navbar expand="lg" className="navbar">

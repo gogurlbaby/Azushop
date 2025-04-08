@@ -13,11 +13,15 @@ export const CartProvider = ({ children }) => {
   };
 
   const toggleWishlist = (product) => {
-    setWishlist((prevWishlist) =>
-      prevWishlist.some((item) => item.id === product.id)
-        ? prevWishlist.filter((item) => item.id !== product.id)
-        : [...prevWishlist, product]
-    );
+    setWishlist((prevWislist) => {
+      const exists = prevWislist.find((item) => item.id === product.id);
+
+      if (exists) {
+        return prevWislist.filter((item) => item.id !== product.id);
+      } else {
+        return [...prevWislist, product];
+      }
+    });
   };
 
   return (
