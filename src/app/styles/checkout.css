@@ -1,0 +1,9 @@
+.checkout-container {
+  padding: 2rem 1rem 5ßrem;
+}
+
+@media (min-width: 992px) {
+  .checkout-container {
+    padding: 2.25rem 2.5rem 7.813rem;
+  }
+}

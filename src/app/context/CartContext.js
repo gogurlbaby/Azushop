@@ -7,6 +7,7 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [isLoggedIn, setisLoggedIn] = useState(false);
 
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
@@ -62,6 +63,9 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  const login = () => setisLoggedIn(true);
+  const logout = () => setisLoggedIn(false);
+
   return (
     <CartContext.Provider
       value={{
@@ -71,6 +75,9 @@ export const CartProvider = ({ children }) => {
         removeFromCart,
         updateQuantity,
         toggleWishlist,
+        isLoggedIn,
+        login,
+        logout,
       }}
     >
       {children}

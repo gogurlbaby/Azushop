@@ -144,7 +144,9 @@ const Cart = () => {
               <p>
                 Total: <span>${total.toFixed(2)}</span>{" "}
               </p>
-              <button>Proceed to Checkout</button>
+              <button type="submit" onClick={() => router.push("/checkout")}>
+                Proceed to Checkout
+              </button>
             </div>
           </>
         )}

@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 function Hero() {
   const plugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
-
+  const router = useRouter();
   useEffect(() => {
     const currentPlugin = plugin.current;
     return () => {
@@ -69,6 +70,7 @@ function Hero() {
                     {slide.description}
                   </p>
                   <button
+                    onClick={() => router.push("/shop")}
                     className="flex gap-2 justify-center items-center bg-white border border-solid border-white hover:bg-blue-700 text-black font-medium"
                     style={{ padding: "0.8rem", borderRadius: "4px" }}
                   >

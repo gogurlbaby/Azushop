@@ -165,6 +165,7 @@ function ProductDetails({ params }) {
           </div>
           <button
             onClick={() => addToCart(product, parseInt(quantity))}
+            className="cursor-pointer"
             disabled={!product.inStock}
           >
             Add to Cart
