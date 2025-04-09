@@ -12,7 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Star, Slash } from "lucide-react";
+import { Star, Slash, ShoppingCart, Heart, Eye } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -24,7 +24,7 @@ import {
 function ProductDetails({ params }) {
   // Get the id from params instead of router.query
   const { id } = React.use(params);
-  const { addToCart } = useCart();
+  const { addToCart, toggleWishlist, wishlist } = useCart();
   const router = useRouter();
 
   const [product, setProduct] = useState(null);
@@ -79,10 +79,6 @@ function ProductDetails({ params }) {
     }
   };
 
-  const handleReviewClick = (index) => {
-    setActiveReview(index);
-  };
-
   const renderStars = (rating) => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
@@ -93,6 +89,10 @@ function ProductDetails({ params }) {
         }
       />
     ));
+  };
+
+  const viewProduct = (product) => {
+    router.push(`/shop/details/${product.id}`);
   };
 
   return (
@@ -152,7 +152,7 @@ function ProductDetails({ params }) {
           <p>{product.description}</p>
           <span>${product.price}</span>
           <br />
-          <span>{product.inStock ? "In Stock" : "Out of Stock"}</span>
+          <span>{product.inStock}</span>
           <div>
             <label>Quantity:</label>
             <select value={quantity} onChange={handleQuantityChange}>
@@ -164,7 +164,7 @@ function ProductDetails({ params }) {
             </select>
           </div>
           <button
-            onClick={() => addToCart({ ...product, quantity })}
+            onClick={() => addToCart(product, parseInt(quantity))}
             disabled={!product.inStock}
           >
             Add to Cart
@@ -184,7 +184,7 @@ function ProductDetails({ params }) {
                 : "Show Related Products"}
             </button>
             {showRelatedProducts && (
-              <div>
+              <div className="">
                 {products
                   .filter(
                     (p) =>
@@ -194,17 +194,51 @@ function ProductDetails({ params }) {
                   .map((relatedProduct) => (
                     <div
                       key={relatedProduct.id}
-                      className="related-product mb-4"
+                      className="bg-[#F9FBFC] flex justify-center flex-col items-center rounded-lg border border-solid: border-[#F9FBFC]"
+                      style={{ padding: "0.5rem 1rem 1.5rem" }}
                     >
+                      <span
+                        className="text-[#01589A] relative lg:left-[8.5rem] left-[7rem]"
+                        style={{ marginTop: "0.5rem" }}
+                      >
+                        {product.brand}
+                      </span>
                       <img
                         src={relatedProduct.imageUrl}
                         alt={relatedProduct.title}
+                        style={{ marginBottom: "1rem" }}
                         onClick={() =>
                           router.push(`/shop/details/${relatedProduct.id}`)
                         }
                       />
-                      <p>{relatedProduct.title}</p>
-                      <span>${relatedProduct.price}</span>
+                      <p className="font-semibold">{relatedProduct.title}</p>
+                      <p className="font-normal">
+                        {relatedProduct.description}
+                      </p>
+                      <span
+                        className="text-[#01589A] font-semibold"
+                        style={{ marginBottom: "1rem" }}
+                      >
+                        ${relatedProduct.price}
+                      </span>
+                      <div className="flex gap-2" style={{ marginTop: "2rem" }}>
+                        <ShoppingCart
+                          className="cursor-pointer hover:text-blue-700"
+                          onClick={() => addToCart(product, 1)}
+                        />
+                        <Heart
+                          className={`cursor-pointer ${
+                            wishlist.some((item) => item.id === product.id)
+                              ? "text-red-500"
+                              : "hover:text-red-500"
+                          }`}
+                          onClick={() => toggleWishlist(product)}
+                        />
+                        <Eye
+                          className="cursor-pointer  hover:text-green-600"
+                          onClick={() => viewProduct(product)}
+                        />
+                      </div>
                     </div>
                   ))}
               </div>

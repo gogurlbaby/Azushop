@@ -8,8 +8,47 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
-  const addToCart = (product) => {
-    setCart((prevCart) => [...prevCart, product]);
+  const addToCart = (product, quantity = 1) => {
+    setCart((prevCart) => {
+      const existingitem = prevCart.find((item) => item.id === product.id);
+      const parsedPrice =
+        typeof product.price === "string"
+          ? parseFloat(product.price)
+          : product.price;
+      const productWithNumberPrice = { ...product, price: parsedPrice };
+
+      if (existingitem) {
+        return prevCart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+      return [
+        ...prevCart,
+        {
+          ...productWithNumberPrice,
+          quantity,
+          cartItemId: Date.now() + Math.random(),
+        },
+      ];
+    });
+  };
+
+  const removeFromCart = (cartItemId) => {
+    setCart((prevCart) =>
+      prevCart.filter((item) => item.cartItemId !== cartItemId)
+    );
+  };
+
+  const updateQuantity = (cartItemId, newQuantity) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.cartItemId === cartItemId
+          ? { ...item, quantity: newQuantity }
+          : item
+      )
+    );
   };
 
   const toggleWishlist = (product) => {
@@ -18,14 +57,22 @@ export const CartProvider = ({ children }) => {
 
       if (exists) {
         return prevWislist.filter((item) => item.id !== product.id);
-      } else {
-        return [...prevWislist, product];
       }
+      return [...prevWislist, product];
     });
   };
 
   return (
-    <CartContext.Provider value={{ cart, wishlist, addToCart, toggleWishlist }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        wishlist,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        toggleWishlist,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

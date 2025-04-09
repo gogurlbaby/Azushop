@@ -32,7 +32,7 @@ function Shop() {
   const [selectedBrand, setSelectedBrand] = useState([]);
   const [brandSelectOpen, setBrandSelectOpen] = useState(false);
   const [price, setPrice] = useState("");
-  const { addToCart, toggleWishlist } = useCart();
+  const { addToCart, toggleWishlist, wishlist } = useCart();
   const router = useRouter();
 
   const filteredProducts = products.filter((product) => {
@@ -206,7 +206,7 @@ function Shop() {
                 </span>
                 <img
                   src={product.imageUrl}
-                  alt=""
+                  alt={product.title}
                   style={{ marginBottom: "1rem" }}
                 />
                 <p className="font-semibold">{product.title}</p>
@@ -220,15 +220,14 @@ function Shop() {
                 <div className="flex gap-2" style={{ marginTop: "2rem" }}>
                   <ShoppingCart
                     className="cursor-pointer hover:text-blue-700"
-                    onClick={() => addToCart(product)}
+                    onClick={() => addToCart(product, 1)}
                   />
                   <Heart
-                    // className={`cursor-pointer ${
-                    //   wishlist.some((item) => item.id === product.id)
-                    //     ? "text-red-500"
-                    //     : "text-black"
-                    // }`}
-                    className="cursor-pointer hover:text-red-500"
+                    className={`cursor-pointer ${
+                      wishlist.some((item) => item.id === product.id)
+                        ? "text-red-500"
+                        : "hover:text-red-500"
+                    }`}
                     onClick={() => toggleWishlist(product)}
                   />
                   <Eye

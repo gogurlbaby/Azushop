@@ -12,12 +12,27 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Slash } from "lucide-react";
 import "../styles/cart.css";
-import products from "../json/products.json";
+import { useCart } from "../context/CartContext";
+import { useRouter } from "next/navigation";
 
 const Cart = () => {
-  const [quantity, setQuantity] = useState(1);
+  const { cart, removeFromCart, updateQuantity } = useCart();
+  const router = useRouter();
 
-  const handleQuantityChange = (e) => setQuantity(e.target.value);
+  const handleQuantityChange = (cartItemId, value) => {
+    const newQuantity = parseInt(value);
+    if (newQuantity > 0) updateQuantity(cartItemId, newQuantity);
+  };
+
+  const getNumericPrice = (price) => {
+    return typeof price === "string" ? parseFloat(price) : price || 0;
+  };
+
+  const total = cart.reduce((sum, item) => {
+    const numericPrice = getNumericPrice(item.price);
+    return sum + numericPrice * item.quantity;
+  }, 0);
+
   return (
     <>
       <Banner title="Cart" />
@@ -45,56 +60,94 @@ const Cart = () => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div
-          className="lg:flex-row lg:justify-start lg:items-start flex flex-col justify-center items-center gap-32"
-          style={{ marginBottom: "3.25rem" }}
-        >
+        {cart.length === 0 ? (
           <div>
-            <p>Product</p>
-            <div>
-              {/* {products.map((product) => ( */}
-              <div className="flex">
-                <img src="/images/computer.svg" alt="" className="w-[30%]" />
-                <div>
-                  <p>Apple MacBook Pro 2019 | 16</p>
-                  <p>
-                    Brand: <span>Apple</span>
-                  </p>
-                  <button className="text-red-500 underline">Remove</button>
-                </div>
+            <p className="text-center mt-8">Your cart is empty.</p>
+            <p
+              className=" cursor-pointer text-center text-blue-700 text-lg"
+              onClick={() => router.push("/shop")}
+            >
+              Shop Your Items Here.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div
+              className="lg:flex-row lg:justify-start lg:items-start flex flex-col justify-center items-center gap-32"
+              style={{ marginBottom: "3.25rem" }}
+            >
+              <div>
+                <p>Product</p>
+                {cart.map((item) => (
+                  <div key={item.cartItemId}>
+                    <div className="flex">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
+                        className="w-[30%]"
+                      />
+                      <div>
+                        <p>{item.title}</p>
+                        <p>
+                          Brand: <span>{item.brand}</span>
+                        </p>
+                        <button
+                          className="text-red-500 underline"
+                          onClick={() => removeFromCart(item.cartItemId)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              {/* ))} */}
-            </div>
-          </div>
-          <div>
-            <p>Price</p>
-            <span>$749.99 </span>
-          </div>
-          <div>
-            <p>Quantity</p>
-            <select value={quantity} onChange={handleQuantityChange}>
-              {[...Array(10).keys()].map((x) => (
-                <option key={x + 1} value={x + 1}>
-                  {x + 1}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <p>Total</p>
-            <span>$749.99 </span>
-          </div>
-        </div>
 
-        <div>
-          <p>
-            Items: <span>1</span>
-          </p>
-          <p>
-            Total: <span>$749.99</span>{" "}
-          </p>
-          <button>Proceed to Checkout</button>
-        </div>
+              <div>
+                <p>Price</p>
+                {cart.map((item) => (
+                  <span key={item.cartItemId}>${item.price.toFixed(2)}</span>
+                ))}
+              </div>
+              <div>
+                <p>Quantity</p>
+                {cart.map((item) => (
+                  <select
+                    key={item.cartItemId}
+                    value={item.quantity}
+                    onChange={(e) =>
+                      handleQuantityChange(item.cartItemId, e.target.value)
+                    }
+                  >
+                    {[...Array(10).keys()].map((x) => (
+                      <option key={x + 1} value={x + 1}>
+                        {x + 1}
+                      </option>
+                    ))}
+                  </select>
+                ))}
+              </div>
+              <div>
+                <p>Total</p>
+                {cart.map((item) => (
+                  <span key={item.cartItemId}>
+                    ${(getNumericPrice(item.price) * item.quantity).toFixed(2)}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p>
+                Items: <span>{cart.length}</span>
+              </p>
+              <p>
+                Total: <span>${total.toFixed(2)}</span>{" "}
+              </p>
+              <button>Proceed to Checkout</button>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

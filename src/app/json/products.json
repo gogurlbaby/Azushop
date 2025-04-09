@@ -6,7 +6,7 @@
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "749.99"
+    "price": 749.99
   },
   {
     "id": 1,
@@ -15,7 +15,7 @@
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "349.99"
+    "price": 349.99
   },
   {
     "id": 2,
@@ -24,7 +24,8 @@
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "249.99"
+    "price": 249.99,
+    "inStock": true
   },
   {
     "id": 3,
@@ -33,7 +34,8 @@
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "500.99"
+    "price": 500.99,
+    "inStock": true
   },
   {
     "id": 4,
@@ -42,7 +44,8 @@
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "100.00"
+    "price": 100.0,
+    "inStock": false
   },
   {
     "id": 5,
@@ -51,6 +54,7 @@
     "imageUrl": "/images/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
     "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": "1000.00"
+    "price": 1000.0,
+    "inStock": true
   }
 ]

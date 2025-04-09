@@ -25,17 +25,13 @@ function NavBar() {
     router.push(route);
   };
 
-  const handleViewDetails = (productId) => {
-    router.push(`/shop/details/${productId}`);
-  };
-
   return (
     <div>
       <Navbar expand="lg" className="navbar">
         <Container fluid>
           <Navbar.Brand
             className="navbar-brand"
-            onClick={() => handleNavClick("home", "/")}
+            onClick={() => router.push("/")}
           >
             <p className="logo">Azushop</p>
           </Navbar.Brand>
