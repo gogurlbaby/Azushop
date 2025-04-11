@@ -7,7 +7,6 @@ import { useCart } from "../../../context/CartContext";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -20,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import "../../../styles/shop_details.css";
 
 function ProductDetails({ params }) {
   // Get the id from params instead of router.query
@@ -85,7 +85,7 @@ function ProductDetails({ params }) {
         key={i}
         size={20}
         className={
-          i < rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
+          i < rating ? "text-[#01589A] fill-[#01589A]" : "text-gray-300"
         }
       />
     ));
@@ -96,16 +96,11 @@ function ProductDetails({ params }) {
   };
 
   return (
-    <div
-      style={{ padding: "5.5rem 2.5rem 9.813rem" }}
-      className="flex flex-col justify-center items-center"
-    >
+    <div className="details-container flex flex-col justify-center items-center">
       <Breadcrumb className="flex justify-center items-center">
         <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="text-black font-sans text-xl">
-              Home
-            </BreadcrumbLink>
+          <BreadcrumbItem className="text-black font-sans text-xl">
+            Home
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <Slash />
@@ -126,17 +121,16 @@ function ProductDetails({ params }) {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div
-        className="lg:flex-row flex flex-col gap-8"
-        style={{ marginTop: "8.125rem" }}
-      >
-        <div>
-          <img src={product.imageUrl} alt={product.title} />
+      <div className="product-details-container lg:flex-row flex flex-col gap-8">
+        <div className="image-container bg-[#F9FBFC] rounded-xs">
+          <img src={product.imageUrl} alt={product.title} className="w-full" />
         </div>
         <div>
-          <div className="flex items-center gap-16">
-            <span>Brand: {product.brand}</span>
-            <span className="flex items-center gap-0.5">
+          <div className="flex gap-16 mb-8">
+            <p className="font-sans text-md text-[#999] font-semibold">
+              Brand: <span className="text-black">{product.brand}</span>
+            </p>
+            <span className="flex gap-0.5 text-black text-md font-semibold">
               {renderStars(
                 reviews.length > 0
                   ? Math.round(
@@ -148,24 +142,45 @@ function ProductDetails({ params }) {
               ({reviews.length} review{reviews.length !== 1 ? "s" : ""})
             </span>
           </div>
-          <h4>{product.title}</h4>
-          <p>{product.description}</p>
-          <span>${product.price}</span>
-          <br />
+          <h3
+            className="text-black font-serif font-bold text-4xl"
+            style={{ marginBottom: "1.5rem" }}
+          >
+            {product.title}
+          </h3>
+          <p
+            className="text-black font-sans font-normal text-base leading-6"
+            style={{ marginBottom: "1.5rem", maxWidth: "15rem" }}
+          >
+            {product.description}
+          </p>
+          <p
+            className="text-[#01589A] font-semibold font-sans text-3xl"
+            style={{ marginBottom: "1.25rem" }}
+          >
+            ${product.price}
+          </p>
+
           <span>{product.inStock}</span>
-          <div>
-            <label>Quantity:</label>
-            <select value={quantity} onChange={handleQuantityChange}>
-              {[...Array(10).keys()].map((x) => (
-                <option key={x + 1} value={x + 1}>
-                  {x + 1}
-                </option>
-              ))}
-            </select>
-          </div>
+          <br />
+          <br />
+          <select
+            value={quantity}
+            onChange={handleQuantityChange}
+            className="bg-[#E6EFF5] rounded-sm text-[#999]"
+            style={{ padding: "0.5rem 1rem", marginBottom: "2.5rem" }}
+          >
+            {[...Array(10).keys()].map((x) => (
+              <option key={x + 1} value={x + 1}>
+                {x + 1}
+              </option>
+            ))}
+          </select>
+
           <button
             onClick={() => addToCart(product, parseInt(quantity))}
-            className="cursor-pointer"
+            className="w-full cursor-pointer flex justify-center items-center bg-[#01589A] text-white text-lg font-sans font-semibold"
+            style={{ padding: "0.6rem 1.5rem", borderRadius: "5px" }}
             disabled={!product.inStock}
           >
             Add to Cart
@@ -255,23 +270,29 @@ function ProductDetails({ params }) {
             </button>
             {showWriteReview && (
               <div>
-                <div className="flex flex-col gap-4">
-                  <label>Name</label>
+                <div className="flex flex-col gap-4 mb-4">
+                  <label className="text-black font-sans text-lg">Name</label>
                   <input
                     type="text"
                     placeholder="Enter your name"
                     value={reviewerName}
                     onChange={(e) => setReviewerName(e.target.value)}
-                    className="border border-solid border-black p-2"
+                    className="bg-[#E6EFF5] border border-solid border-[#E6EFF5] rounded-sm text-black"
+                    style={{ padding: "0.5rem 1rem" }}
                   />
                 </div>
                 <div className="flex flex-col gap-4 mt-4">
-                  <label>Ratings</label>
+                  <label className="text-black font-sans text-lg">
+                    Ratings
+                  </label>
                   <Select
                     value={rating}
                     onValueChange={(value) => setRating(value)}
                   >
-                    <SelectTrigger className="w-[150px]">
+                    <SelectTrigger
+                      className="w-full bg-[#E6EFF5] border border-solid border-[#E6EFF5] text-[#999]"
+                      style={{ padding: "0.6rem 1rem", borderRadius: "5px" }}
+                    >
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
@@ -282,7 +303,7 @@ function ProductDetails({ params }) {
                               <Star
                                 key={i}
                                 size={16}
-                                className="text-yellow-500 fill-yellow-500"
+                                className="text-[#01589A] fill-[#01589A]"
                               />
                             ))}
                           </div>
@@ -292,11 +313,14 @@ function ProductDetails({ params }) {
                   </Select>
                 </div>
                 <div className="flex flex-col gap-4 mt-4">
-                  <label>Comments</label>
+                  <label className="text-black font-sans text-lg">
+                    Comments
+                  </label>
                   <textarea
                     rows="5"
                     cols="33"
-                    className="border border-solid border-black p-2"
+                    className="bg-[#E6EFF5] border border-solid border-[#E6EFF5] rounded-sm text-black"
+                    style={{ padding: "0.5rem 1rem", marginBottom: "2rem" }}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Write your review here..."
@@ -305,7 +329,8 @@ function ProductDetails({ params }) {
                 <button
                   onClick={handleSubmitReview}
                   disabled={!rating || !comment || !reviewerName}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                  className="w-full cursor-pointer flex justify-center items-center bg-[#01589A] text-white text-lg font-sans font-semibold"
+                  style={{ padding: "0.6rem 1.5rem", borderRadius: "5px" }}
                 >
                   Submit
                 </button>
@@ -325,19 +350,37 @@ function ProductDetails({ params }) {
             {showAllReviews && (
               <div>
                 {reviews.length === 0 ? (
-                  <p>No reviews yet. Be the first to write one!</p>
+                  <p className="text-lg text-black">
+                    No reviews yet. Be the first to write one!
+                  </p>
                 ) : (
                   reviews.map((review, index) => (
                     <div
                       key={index}
-                      className="border border-solid border-[#D9D9D9] rounded-lg p-4 mb-4"
+                      className="border border-solid border-[#F9FBFC] bg-[#F9FBFC] p-4 mb-4"
+                      style={{ borderRadius: "5px" }}
                     >
-                      <p className="font-semibold">{review.name}</p>
-                      <span className="flex items-center gap-0.5">
+                      <p
+                        className="text-black font-normal font-sans text-xl"
+                        style={{ marginBottom: "0.75rem" }}
+                      >
+                        {review.name}
+                      </p>
+                      <span
+                        className="flex items-center gap-0.5"
+                        style={{ marginBottom: "0.75rem" }}
+                      >
                         {renderStars(review.rating)}
                       </span>
-                      <p>{review.comment}</p>
-                      <p className="text-gray-500 text-sm">{review.date}</p>
+                      <p
+                        className="text-black font-normal font-sans text-md"
+                        style={{ marginBottom: "0.75rem" }}
+                      >
+                        {review.comment}
+                      </p>
+                      <p className="text-gray-500 font-normal font-sans text-md">
+                        {review.date}
+                      </p>
                     </div>
                   ))
                 )}

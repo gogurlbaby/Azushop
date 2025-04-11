@@ -3,58 +3,90 @@
     "id": 0,
     "brand": "Apple",
     "category": "Laptops",
-    "imageUrl": "/images/computer.svg",
+    "imageUrl": "/images/shop/computer.svg",
     "title": "Apple MacBook Pro 2019 | 16",
-    "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": 749.99
+    "description": "RAM 16.0 GB  | Memory 512 GB  Keyboard layout Eng (English)  ",
+    "price": 749.99,
+    "inStock": "In stock"
   },
   {
     "id": 1,
-    "brand": "Samsung",
-    "category": "Phones",
-    "imageUrl": "/images/computer.svg",
-    "title": "Apple MacBook Pro 2019 | 16",
-    "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": 349.99
+    "brand": "Apple",
+    "category": "Laptops",
+    "imageUrl": "/images/shop/macbook.svg",
+    "title": "Apple MacBook Pro 2020 | 13.3 | Touch Bar",
+    "description": "RAM 16.0 GB  | Memory 512 GB Keyboard layout Eng (English)   ",
+    "price": 949.99,
+    "inStock": "In stock"
   },
   {
     "id": 2,
-    "brand": "Lenovo",
-    "category": "Cameras",
-    "imageUrl": "/images/computer.svg",
-    "title": "Apple MacBook Pro 2019 | 16",
-    "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": 249.99,
-    "inStock": true
+    "brand": "HP",
+    "category": "Laptops",
+    "imageUrl": "/images/shop/hp.svg",
+    "title": "HP EliteBook 840 G5 | i5-8350U | 14",
+    "description": "8 GB | 128 GB SSD | Backlit keyboard | Webcam | Win 11 Pro | silver | SE",
+    "price": 349.99,
+    "inStock": "In stock"
   },
   {
     "id": 3,
-    "brand": "Sony",
-    "category": "Watches",
-    "imageUrl": "/images/computer.svg",
-    "title": "Apple MacBook Pro 2019 | 16",
-    "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": 500.99,
-    "inStock": true
+    "brand": "Apple",
+    "category": "Phones",
+    "imageUrl": "/images/shop/iphone.svg",
+    "title": "iPhone 15",
+    "description": "128 GB | Dual SIM | blue Unlocked",
+    "price": 449.99,
+    "inStock": "Out of stock"
   },
   {
     "id": 4,
-    "brand": "Apple",
-    "category": "Cameras",
-    "imageUrl": "/images/computer.svg",
-    "title": "Apple MacBook Pro 2019 | 16",
-    "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": 100.0,
-    "inStock": false
+    "brand": "Samsung",
+    "category": "Phones",
+    "imageUrl": "/images/shop/samsung.svg",
+    "title": "Samsung Galaxy S22 Ultra 5G",
+    "description": "8GB | 128 GB | Dual-SIM | Phantom Black",
+    "price": 449.99,
+    "inStock": "In stock"
   },
   {
     "id": 5,
-    "brand": "Apple",
+    "brand": "Lenovo",
     "category": "Laptops",
-    "imageUrl": "/images/computer.svg",
-    "title": "Apple MacBook Pro 2019 | 16",
-    "description": "RAM 16.0 GB  | Memory 512 GB   Keyboard layout Eng (English)  ",
-    "price": 1000.0,
-    "inStock": true
+    "imageUrl": "/images/shop/lenovo.svg",
+    "title": "Lenovo Thinkpad T14 G1 | i7-10610U | 14",
+    "description": "16 GB | 512 GB SSD | Backlit keyboard | FP | Win 11 Home | ND",
+    "price": 449.99,
+    "inStock": "In stock"
+  },
+  {
+    "id": 6,
+    "brand": "Sony",
+    "category": "Cameras",
+    "imageUrl": "/images/shop/camera.svg",
+    "title": "Sony Alpha 7 III with28-70mm zoom lens, 24.2MP* 35mm ",
+    "description": "Full-frame Exmor R CMOS sensor with 24.2 MP for BIONZ",
+    "price": 449.99,
+    "inStock": "In stock"
+  },
+  {
+    "id": 7,
+    "brand": "Samsung",
+    "category": "Phones",
+    "imageUrl": "/images/shop/samsung.svg",
+    "title": "Samsung Galaxy S22 Ultra 5G",
+    "description": "8GB | 128 GB | Dual-SIM | Phantom Black",
+    "price": 449.99,
+    "inStock": "In stock"
+  },
+  {
+    "id": 8,
+    "brand": "Apple",
+    "category": "Phones",
+    "imageUrl": "/images/shop/ipad.svg",
+    "title": "iPad 9 (2021) | 10.2",
+    "description": "64GB | silver",
+    "price": 449.99,
+    "inStock": "In stock"
   }
 ]

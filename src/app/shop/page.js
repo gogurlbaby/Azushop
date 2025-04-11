@@ -95,15 +95,20 @@ function Shop() {
 
         <div className="lg:flex-row flex flex-col gap-16">
           {/* Categories  Sidebar */}
-          <div style={{ paddingTop: "6.875rem" }}>
+          <div style={{ paddingTop: "5rem" }}>
             <div className="">
-              <p>Shop By</p>
-              <div>
+              <p className="font-sans text-black text-2xl font-semibold">
+                Shop By
+              </p>
+              <div style={{ padding: "1rem 0" }}>
                 <Select
                   onValueChange={(value) => setSelectedCategory(value)}
                   value={selectedCategory}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger
+                    className="bg-white w-full rounded-sm border border-solid border-[#999]"
+                    style={{ padding: "0.5rem 1rem", borderRadius: "5px" }}
+                  >
                     <SelectValue placeholder="Product Categories" />
                   </SelectTrigger>
 
@@ -120,12 +125,12 @@ function Shop() {
               </div>
             </div>
 
-            <hr className="w-full border-[0.5px] border-solid bg-[#D9D9D9]" />
-
-            <div className="">
-              <p>Brand</p>
+            <div className="" style={{ padding: "1.5rem 0" }}>
               <Select open={brandSelectOpen} onOpenChange={setBrandSelectOpen}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger
+                  className="bg-white w-full border border-solid border-[#999]"
+                  style={{ padding: "0.5rem 1rem", borderRadius: "5px" }}
+                >
                   <SelectValue placeholder="Brand" />
                 </SelectTrigger>
 
@@ -164,18 +169,18 @@ function Shop() {
               </Select>
             </div>
 
-            <hr className="w-full border-[0.5px] border-solid bg-[#D9D9D9]" />
-
             <div>
-              <p>Price</p>{" "}
+              <p className="font-sans text-black text-lg font-semibold mt-3">
+                Price
+              </p>{" "}
               <input
                 type="text"
                 id="price"
                 value={price}
                 onChange={handlePriceChange}
                 placeholder="Enter price"
-                className="bg-[#E6EFF5] w-full rounded-md py-2 px-8 border border-solid border-[#E6EFF5]"
-                style={{ marginBottom: "2rem" }}
+                className="bg-[#E6EFF5] w-full rounded-sm border border-solid border-[#E6EFF5]"
+                style={{ marginBottom: "1.5rem", padding: "0.5rem 1rem" }}
               />
               <button
                 onClick={handleReset}
@@ -190,7 +195,7 @@ function Shop() {
           {/* Products Display */}
           <div
             className="lg:grid-cols-3 grid grid-cols-1 gap-8"
-            style={{ paddingTop: "6.875rem" }}
+            style={{ marginTop: "5rem" }}
           >
             {filteredProducts.map((product) => (
               <div
