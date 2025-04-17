@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "../context/CartContext";
@@ -37,21 +36,62 @@ function AuthModals() {
     router.push("/checkout");
   };
   return (
-    <div>
+    <div className="">
       <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Login</DialogTitle>
+            <DialogTitle
+              className="text-black text-2xl font-sans font-normal text-left"
+              style={{ padding: "1rem" }}
+            >
+              Login
+            </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleLoginSubmit} className="space-y-4">
+          <form
+            onSubmit={handleLoginSubmit}
+            className="space-y-4"
+            style={{ padding: "1rem" }}
+          >
             <div>
-              <Input type="email" placeholder="Email" required />
+              <Input
+                type="email"
+                placeholder="Email address *"
+                required
+                className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                style={{
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "5px",
+                }}
+              />
             </div>
             <div>
-              <Input type="password" placeholder="Password" required />
+              <Input
+                type="password"
+                placeholder="Password *"
+                required
+                className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                style={{
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "5px",
+                  marginTop: "2rem",
+                }}
+              />
             </div>
-            <Button type="submit">Login</Button>
-            <p>
+            <button
+              type="submit"
+              className="w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
+              style={{
+                padding: "0.5rem 0",
+                borderRadius: "5px",
+                marginTop: "2rem",
+              }}
+            >
+              Login
+            </button>
+            <p
+              className="text-black text-md font-sans font-normal text-center underline cursor-pointer"
+              style={{ marginTop: "2rem" }}
+            >
               Don’t have an account?{" "}
               <span
                 className="text-blue-500 cursor-pointer"
@@ -67,23 +107,91 @@ function AuthModals() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={registerOpen} onOpenChange={setRegisterOpen}>
+      <Dialog
+        open={registerOpen}
+        onOpenChange={setRegisterOpen}
+        style={{ padding: "2.5rem 5rem" }}
+      >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Register</DialogTitle>{" "}
+            <DialogTitle
+              className="text-black text-2xl font-sans font-normal text-left"
+              style={{ padding: "1rem" }}
+            >
+              Register
+            </DialogTitle>{" "}
           </DialogHeader>
-          <form onSubmit={handleRegisterSubmit} className="space-y-4">
+          <form
+            onSubmit={handleRegisterSubmit}
+            className="space-y-4"
+            style={{ padding: "1rem" }}
+          >
             <div>
-              <Input type="text" placeholder="Name" required />
+              <Input
+                type="text"
+                placeholder="Full name"
+                required
+                className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                style={{
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "5px",
+                }}
+              />
             </div>
             <div>
-              <Input type="email" placeholder="Email" required />
+              <Input
+                type="email"
+                placeholder="Email address *"
+                required
+                className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                style={{
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "5px",
+                  marginTop: "2rem",
+                }}
+              />
             </div>
             <div>
-              <Input type="password" placeholder="Password" required />
+              <Input
+                type="password"
+                placeholder="Password *"
+                required
+                className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                style={{
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "5px",
+                  marginTop: "2rem",
+                }}
+              />
             </div>
-            <Button type="submit">Register</Button>
-            <p>
+            <div>
+              <Input
+                type="confirmPassword"
+                placeholder="Confirm password *"
+                required
+                className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                style={{
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "5px",
+                  marginTop: "2rem",
+                }}
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
+              style={{
+                padding: "0.5rem 0",
+                borderRadius: "5px",
+                marginTop: "2rem",
+              }}
+            >
+              Register
+            </button>
+            <p
+              className="text-black text-md font-sans font-normal text-center underline cursor-pointer"
+              style={{ marginTop: "2rem" }}
+            >
               Already have an account?{" "}
               <span
                 className="text-blue-500 cursor-pointer"

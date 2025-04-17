@@ -1,9 +1,25 @@
 .checkout-container {
-  padding: 2rem 1rem 5ßrem;
+  padding: 2rem 1rem 5rem;
+}
+
+.form-container {
+  margin-top: 5rem;
+}
+
+.product {
+  margin-top: 5rem;
 }
 
 @media (min-width: 992px) {
   .checkout-container {
     padding: 2.25rem 2.5rem 7.813rem;
+  }
+
+  .form-container {
+    margin-top: 8.75rem;
+  }
+
+  .product {
+    margin-top: 0;
   }
 }

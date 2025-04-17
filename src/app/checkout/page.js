@@ -67,10 +67,7 @@ function Checkout() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div
-          className="flex-col gap-10 items-center"
-          style={{ marginTop: "8.75rem" }}
-        >
+        <div className="form-container flex-col items-center">
           <Formik
             initialValues={{
               address: "",
@@ -82,9 +79,14 @@ function Checkout() {
             onSubmit={handleSubmit}
           >
             {({ errors, touched, values, handleChange }) => (
-              <Form className="lg:flex-row flex flex-col justify-between">
+              <Form className="lg:flex-row lg:justify-between flex flex-col">
                 <div className="">
-                  <p>Billing Details</p>
+                  <p
+                    className="font-sans font-semibold text-black text-2xl"
+                    style={{ marginBottom: "2rem" }}
+                  >
+                    Billing Details
+                  </p>
                   <div>
                     {" "}
                     <Field
@@ -93,11 +95,15 @@ function Checkout() {
                       id="address"
                       value={values.address}
                       onChange={handleChange}
-                      placeholder="Address"
-                      className="border border-solid border-black"
+                      placeholder="Address *"
+                      className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                      style={{
+                        padding: "0.5rem 1.5rem",
+                        borderRadius: "5px",
+                      }}
                     />
                     {errors.address && touched.address ? (
-                      <div className="text-red-500 text-sm">
+                      <div className="text-red-500 text-sm mt-1">
                         {errors.address}
                       </div>
                     ) : null}
@@ -110,10 +116,17 @@ function Checkout() {
                       value={values.city}
                       onChange={handleChange}
                       placeholder="City"
-                      className="border border-solid border-black"
+                      className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                      style={{
+                        padding: "0.5rem 1.5rem",
+                        borderRadius: "5px",
+                        marginTop: "2rem",
+                      }}
                     />
                     {errors.city && touched.city ? (
-                      <div className="text-red-500 text-sm">{errors.city}</div>
+                      <div className="text-red-500 text-sm mt-1">
+                        {errors.city}
+                      </div>
                     ) : null}
                   </div>
                   <div>
@@ -124,10 +137,15 @@ function Checkout() {
                       value={values.postalCode}
                       onChange={handleChange}
                       placeholder="Postal code"
-                      className="border border-solid border-black"
+                      className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                      style={{
+                        padding: "0.5rem 1.5rem",
+                        borderRadius: "5px",
+                        marginTop: "2rem",
+                      }}
                     />
                     {errors.postalCode && touched.postalCode ? (
-                      <div className="text-red-500 text-sm">
+                      <div className="text-red-500 text-sm mt-1">
                         {errors.postalCode}
                       </div>
                     ) : null}
@@ -140,22 +158,33 @@ function Checkout() {
                       value={values.country}
                       onChange={handleChange}
                       placeholder="Country"
-                      className="border border-solid border-black"
+                      className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                      style={{
+                        padding: "0.5rem 1.5rem",
+                        borderRadius: "5px",
+                        marginTop: "2rem",
+                      }}
                     />
                     {errors.country && touched.country ? (
-                      <div className="text-red-500 text-sm">
+                      <div className="text-red-500 text-sm mt-1">
                         {errors.country}
                       </div>
                     ) : null}
                   </div>
                 </div>
 
-                <div>
-                  <p>Products</p>
+                <div className="">
+                  <p
+                    className="product font-sans font-semibold text-black text-2xl"
+                    style={{ marginBottom: "2rem" }}
+                  >
+                    Products
+                  </p>
                   {cart.map((item) => (
                     <div
                       key={item.cartItemId}
-                      className="flex justify-between items-center"
+                      className="bg-[#F9FBFC] flex justify-between items-center border-b-1 border-b-solid border-b-[#D9D9D9]"
+                      style={{ padding: "2.5rem 0", marginBottom: "2rem" }}
                     >
                       <div className="flex gap-0.5">
                         <img
@@ -164,47 +193,88 @@ function Checkout() {
                           className="w-[30%]"
                         />
                         <div>
-                          <p>{item.title}</p>
-                          <p>
-                            Brand: <span>{item.brand}</span>
+                          <p className="font-sans font-semibold text-black text-md mb-2">
+                            {item.title}
                           </p>
-                          <span>${item.price.toFixed(2)}</span>
+                          <p className="font-sans font-semibold text-[#999] text-md mb-2">
+                            Brand:{" "}
+                            <span className="text-black">{item.brand}</span>
+                          </p>
+                          <span className="font-sans font-semibold text-black text-md mb-2">
+                            ${item.price.toFixed(2)}
+                          </span>
                         </div>
                       </div>
-                      <span>${(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="font-sans font-semibold text-black text-lg mb-2">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </span>
                     </div>
                   ))}
 
-                  <div className="">
-                    <p>Shipping</p>
+                  <div
+                    className="border-b-1 border-b-solid border-b-[#D9D9D9]"
+                    style={{ padding: "0.5rem 0" }}
+                  >
+                    <p className="font-sans font-semibold text-black text-base mb-2">
+                      Shipping
+                    </p>
                     <div className="flex justify-between items-center">
-                      <p>Shipping fees</p>
-                      <span>$0.00</span>
+                      <p className="font-sans font-normal text-black text-sm mb-1">
+                        Shipping fees
+                      </p>
+                      <span className="font-sans font-semibold text-black text-md">
+                        $0.00
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <p>Tax:</p>
-                      <span>$10.00</span>
+                      <p className="font-sans font-normal text-black text-sm">
+                        Tax:
+                      </p>
+                      <span className="font-sans font-semibold text-black text-md">
+                        $10.00
+                      </span>
                     </div>
                   </div>
 
-                  <div className="">
+                  <div
+                    className="border-b-1 border-b-solid border-b-[#D9D9D9]"
+                    style={{ padding: "1rem 0" }}
+                  >
                     <div className="flex justify-between items-center">
-                      <p>Total</p>
-                      <span>${(total + 10).toFixed(2)}</span>
+                      <p className="font-sans font-semibold text-black text-base">
+                        Total
+                      </p>
+                      <span className="font-sans font-semibold text-black text-md">
+                        ${(total + 10).toFixed(2)}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="">
-                    <p className="">Select Method</p>
+                  <div
+                    className="border-b-1 border-b-solid border-b-[#D9D9D9]"
+                    style={{ padding: "1rem 0", marginBottom: "2.5rem" }}
+                  >
+                    <p className="font-sans font-semibold text-black text-base mb-1">
+                      Select Method
+                    </p>
                     <div className=" flex gap-2">
                       <Field type="radio" name="selectMethod" id="" />
-                      <label htmlFor="selectMethod">
+                      <label
+                        htmlFor="selectMethod"
+                        className="font-sans font-normal text-black text-md"
+                      >
                         Paypal or credit card
                       </label>
                     </div>
                   </div>
 
-                  <button type="submit">Place order</button>
+                  <button
+                    type="submit"
+                    className="w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
+                    style={{ padding: "0.5rem 0", borderRadius: "5px" }}
+                  >
+                    Place order
+                  </button>
                 </div>
               </Form>
             )}

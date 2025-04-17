@@ -204,7 +204,7 @@ function Shop() {
                 key={product.id}
               >
                 <span
-                  className="text-[#01589A] relative lg:left-[8.5rem] left-[7rem]"
+                  className="text-[#01589A] relative self-end"
                   style={{ marginTop: "0.5rem" }}
                 >
                   {product.brand}

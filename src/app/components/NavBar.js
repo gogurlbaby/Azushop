@@ -22,7 +22,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 function NavBar() {
   const [active, setActive] = useState("home");
@@ -114,7 +113,11 @@ function NavBar() {
                 </Nav.Link>
               </Nav>
               <Nav className="justify-content-end flex-grow-1 pe-3 gap-3 mt-3 mt-lg-0">
-                <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
+                <Dialog
+                  open={loginOpen}
+                  onOpenChange={setLoginOpen}
+                  style={{ padding: "2.5rem 5rem" }}
+                >
                   <DialogTrigger asChild>
                     <Nav.Link
                       variant="ghost"
@@ -127,20 +130,54 @@ function NavBar() {
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Login</DialogTitle>
+                      <DialogTitle
+                        className="text-black text-2xl font-sans font-normal text-left"
+                        style={{ padding: "1rem" }}
+                      >
+                        Login
+                      </DialogTitle>
                     </DialogHeader>
-                    <form onSubmit={handleLoginSubmit} className="space-y-4">
+                    <form
+                      onSubmit={handleLoginSubmit}
+                      className="space-y-4"
+                      style={{ padding: "1rem" }}
+                    >
                       <div>
-                        <Input type="email" placeholder="Email" required />
+                        <Input
+                          type="email"
+                          placeholder="Email address *"
+                          required
+                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                          style={{
+                            padding: "0.5rem 1.5rem",
+                            borderRadius: "5px",
+                          }}
+                        />
                       </div>
                       <div>
                         <Input
                           type="password"
-                          placeholder="Password"
+                          placeholder="Password *"
                           required
+                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                          style={{
+                            padding: "0.5rem 1.5rem",
+                            borderRadius: "5px",
+                            marginTop: "2rem",
+                          }}
                         />
                       </div>
-                      <Button type="submit">Login</Button>
+                      <button
+                        type="submit"
+                        className="w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
+                        style={{
+                          padding: "0.5rem 0",
+                          borderRadius: "5px",
+                          marginTop: "2rem",
+                        }}
+                      >
+                        Login
+                      </button>
                     </form>
                   </DialogContent>
                 </Dialog>
@@ -157,23 +194,80 @@ function NavBar() {
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Register</DialogTitle>
+                      <DialogTitle
+                        className="text-black text-2xl font-sans font-normal text-left"
+                        style={{ padding: "1rem" }}
+                      >
+                        Register
+                      </DialogTitle>
                     </DialogHeader>
-                    <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                    <form
+                      onSubmit={handleRegisterSubmit}
+                      className="space-y-4"
+                      style={{ padding: "1rem" }}
+                    >
                       <div>
-                        <Input type="text" placeholder="Name" required />
+                        <Input
+                          type="text"
+                          placeholder="Full name"
+                          required
+                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                          style={{
+                            padding: "0.5rem 1.5rem",
+                            borderRadius: "5px",
+                          }}
+                        />
                       </div>
                       <div>
-                        <Input type="email" placeholder="Email" required />
+                        <Input
+                          type="email"
+                          placeholder="Email address *"
+                          required
+                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                          style={{
+                            padding: "0.5rem 1.5rem",
+                            borderRadius: "5px",
+                            marginTop: "2rem",
+                          }}
+                        />
                       </div>
                       <div>
                         <Input
                           type="password"
-                          placeholder="Password"
+                          placeholder="Password *"
                           required
+                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                          style={{
+                            padding: "0.5rem 1.5rem",
+                            borderRadius: "5px",
+                            marginTop: "2rem",
+                          }}
                         />
                       </div>
-                      <Button type="submit">Register</Button>
+                      <div>
+                        <Input
+                          type="confirmPassword"
+                          placeholder="Confirm password *"
+                          required
+                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                          style={{
+                            padding: "0.5rem 1.5rem",
+                            borderRadius: "5px",
+                            marginTop: "2rem",
+                          }}
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
+                        style={{
+                          padding: "0.5rem 0",
+                          borderRadius: "5px",
+                          marginTop: "2rem",
+                        }}
+                      >
+                        Register
+                      </button>
                     </form>
                   </DialogContent>
                 </Dialog>

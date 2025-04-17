@@ -8,6 +8,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
+  BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
@@ -19,6 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import "../../../styles/shop_details.css";
 
 function ProductDetails({ params }) {
@@ -29,10 +34,6 @@ function ProductDetails({ params }) {
 
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [activeReview, setActiveReview] = useState(0);
-  const [showRelatedProducts, setShowRelatedProducts] = useState(false);
-  const [showWriteReview, setShowWriteReview] = useState(false);
-  const [showAllReviews, setShowAllReviews] = useState(false);
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [reviews, setReviews] = useState([]);
@@ -60,7 +61,8 @@ function ProductDetails({ params }) {
 
   if (!product) return <div>Loading...</div>;
 
-  const handleQuantityChange = (e) => setQuantity(e.target.value);
+  // Parsed inStock string here
+  const isInStock = product.inStock === "In Stock";
 
   const handleSubmitReview = () => {
     if (rating && comment && reviewerName) {
@@ -75,7 +77,6 @@ function ProductDetails({ params }) {
       setRating("");
       setComment("");
       setReviewerName("");
-      setShowWriteReview(false);
     }
   };
 
@@ -99,9 +100,13 @@ function ProductDetails({ params }) {
     <div className="details-container flex flex-col justify-center items-center">
       <Breadcrumb className="flex justify-center items-center">
         <BreadcrumbList>
-          <BreadcrumbItem className="text-black font-sans text-xl">
+          <BreadcrumbLink
+            href="/"
+            className="text-black font-sans text-xl"
+            style={{ textDecoration: "none" }}
+          >
             Home
-          </BreadcrumbItem>
+          </BreadcrumbLink>
           <BreadcrumbSeparator>
             <Slash />
           </BreadcrumbSeparator>
@@ -162,232 +167,211 @@ function ProductDetails({ params }) {
           </p>
 
           <span>{product.inStock}</span>
-          <br />
-          <br />
-          <select
-            value={quantity}
-            onChange={handleQuantityChange}
-            className="bg-[#E6EFF5] rounded-sm text-[#999]"
-            style={{ padding: "0.5rem 1rem", marginBottom: "2.5rem" }}
-          >
-            {[...Array(10).keys()].map((x) => (
-              <option key={x + 1} value={x + 1}>
-                {x + 1}
-              </option>
-            ))}
-          </select>
+
+          <Select value={quantity} onValueChange={setQuantity}>
+            <SelectTrigger
+              className="bg-[#E6EFF5] rounded-sm text-[#999] border border-solid border-[#E6EFF5]"
+              style={{ padding: "0.5rem 1rem", margin: "1rem 0" }}
+            ></SelectTrigger>
+
+            <SelectContent>
+              {[...Array(10).keys()].map((x) => (
+                <SelectItem key={x + 1} value={String(x + 1)}>
+                  {x + 1}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           <button
-            onClick={() => addToCart(product, parseInt(quantity))}
+            onClick={() => addToCart(product, parseInt(quantity, 10))}
             className="w-full cursor-pointer flex justify-center items-center bg-[#01589A] text-white text-lg font-sans font-semibold"
             style={{ padding: "0.6rem 1.5rem", borderRadius: "5px" }}
-            disabled={!product.inStock}
+            disabled={!isInStock}
           >
             Add to Cart
           </button>
         </div>
       </div>
 
-      <div className="w-full max-w-7xl" style={{ marginTop: "9.625rem" }}>
-        <div className="lg:flex-row lg:justify-between lg:items-start flex flex-col justify-center items-center gap-8">
-          <div className="flex-1">
-            <button
-              onClick={() => setShowRelatedProducts(!showRelatedProducts)}
-              className="text-lg font-semibold mb-4"
-            >
-              {showRelatedProducts
-                ? "Hide Related Products"
-                : "Show Related Products"}
-            </button>
-            {showRelatedProducts && (
-              <div className="">
-                {products
-                  .filter(
-                    (p) =>
-                      p.category === product.category && p.id !== product.id
-                  )
-                  .slice(0, 4)
-                  .map((relatedProduct) => (
-                    <div
-                      key={relatedProduct.id}
-                      className="bg-[#F9FBFC] flex justify-center flex-col items-center rounded-lg border border-solid: border-[#F9FBFC]"
-                      style={{ padding: "0.5rem 1rem 1.5rem" }}
-                    >
-                      <span
-                        className="text-[#01589A] relative lg:left-[8.5rem] left-[7rem]"
-                        style={{ marginTop: "0.5rem" }}
-                      >
-                        {product.brand}
-                      </span>
-                      <img
-                        src={relatedProduct.imageUrl}
-                        alt={relatedProduct.title}
-                        style={{ marginBottom: "1rem" }}
-                        onClick={() =>
-                          router.push(`/shop/details/${relatedProduct.id}`)
-                        }
-                      />
-                      <p className="font-semibold">{relatedProduct.title}</p>
-                      <p className="font-normal">
-                        {relatedProduct.description}
-                      </p>
-                      <span
-                        className="text-[#01589A] font-semibold"
-                        style={{ marginBottom: "1rem" }}
-                      >
-                        ${relatedProduct.price}
-                      </span>
-                      <div className="flex gap-2" style={{ marginTop: "2rem" }}>
-                        <ShoppingCart
-                          className="cursor-pointer hover:text-blue-700"
-                          onClick={() => addToCart(product, 1)}
-                        />
-                        <Heart
-                          className={`cursor-pointer ${
-                            wishlist.some((item) => item.id === product.id)
-                              ? "text-red-500"
-                              : "hover:text-red-500"
-                          }`}
-                          onClick={() => toggleWishlist(product)}
-                        />
-                        <Eye
-                          className="cursor-pointer  hover:text-green-600"
-                          onClick={() => viewProduct(product)}
-                        />
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            )}
-          </div>
+      <div className="tabs-container w-full max-w-7xl">
+        <Tabs defaultValue="related" className="w-full">
+          <TabsList className="lg:grid-cols-3 grid grid-cols-1 w-full gap-4">
+            <TabsTrigger value="related">Related Products</TabsTrigger>
+            <TabsTrigger value="write-review">Write Your Review</TabsTrigger>
+            <TabsTrigger value="all-reviews">
+              View All Reviews ({reviews.length})
+            </TabsTrigger>
+          </TabsList>
 
-          <div className="flex-1">
-            <button
-              onClick={() => setShowWriteReview(!showWriteReview)}
-              className="text-lg font-semibold mb-4"
-            >
-              {showWriteReview ? "Hide Write Review" : "Write Your Review"}
-            </button>
-            {showWriteReview && (
-              <div>
-                <div className="flex flex-col gap-4 mb-4">
-                  <label className="text-black font-sans text-lg">Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter your name"
-                    value={reviewerName}
-                    onChange={(e) => setReviewerName(e.target.value)}
-                    className="bg-[#E6EFF5] border border-solid border-[#E6EFF5] rounded-sm text-black"
-                    style={{ padding: "0.5rem 1rem" }}
-                  />
-                </div>
-                <div className="flex flex-col gap-4 mt-4">
-                  <label className="text-black font-sans text-lg">
-                    Ratings
-                  </label>
-                  <Select
-                    value={rating}
-                    onValueChange={(value) => setRating(value)}
+          <TabsContent value="related">
+            <div className="lg:flex-row flex flex-col gap-4 overflow-x-auto">
+              {products
+                .filter(
+                  (p) => p.category === product.category && p.id !== product.id
+                )
+                .slice(0, 4)
+                .map((relatedProduct) => (
+                  <div
+                    key={relatedProduct.id}
+                    className="bg-[#F9FBFC] flex flex-col justify-center items-center rounded-lg border border-solid border-[#F9FBFC] min-w-[200px]"
+                    style={{ padding: "0.5rem 1rem 1.5rem" }}
                   >
-                    <SelectTrigger
-                      className="w-full bg-[#E6EFF5] border border-solid border-[#E6EFF5] text-[#999]"
-                      style={{ padding: "0.6rem 1rem", borderRadius: "5px" }}
+                    <span
+                      className="text-[#01589A] self-end"
+                      style={{ marginTop: "0.5rem" }}
                     >
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4, 5].map((value) => (
-                        <SelectItem key={value} value={String(value)}>
-                          <div className="flex gap-1">
-                            {Array.from({ length: value }).map((_, i) => (
-                              <Star
-                                key={i}
-                                size={16}
-                                className="text-[#01589A] fill-[#01589A]"
-                              />
-                            ))}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex flex-col gap-4 mt-4">
-                  <label className="text-black font-sans text-lg">
-                    Comments
-                  </label>
-                  <textarea
-                    rows="5"
-                    cols="33"
-                    className="bg-[#E6EFF5] border border-solid border-[#E6EFF5] rounded-sm text-black"
-                    style={{ padding: "0.5rem 1rem", marginBottom: "2rem" }}
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Write your review here..."
-                  />
-                </div>
-                <button
-                  onClick={handleSubmitReview}
-                  disabled={!rating || !comment || !reviewerName}
-                  className="w-full cursor-pointer flex justify-center items-center bg-[#01589A] text-white text-lg font-sans font-semibold"
-                  style={{ padding: "0.6rem 1.5rem", borderRadius: "5px" }}
-                >
-                  Submit
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="flex-1">
-            <button
-              onClick={() => setShowAllReviews(!showAllReviews)}
-              className="text-lg font-semibold mb-4"
-            >
-              {showAllReviews
-                ? "Hide All Reviews"
-                : `View All Reviews (${reviews.length})`}
-            </button>
-            {showAllReviews && (
-              <div>
-                {reviews.length === 0 ? (
-                  <p className="text-lg text-black">
-                    No reviews yet. Be the first to write one!
-                  </p>
-                ) : (
-                  reviews.map((review, index) => (
-                    <div
-                      key={index}
-                      className="border border-solid border-[#F9FBFC] bg-[#F9FBFC] p-4 mb-4"
-                      style={{ borderRadius: "5px" }}
+                      {relatedProduct.brand}
+                    </span>
+                    <img
+                      src={relatedProduct.imageUrl}
+                      alt={relatedProduct.title}
+                      style={{ marginBottom: "1rem", cursor: "pointer" }}
+                      onClick={() =>
+                        router.push(`/shop/details/${relatedProduct.id}`)
+                      }
+                    />
+                    <p className="font-semibold">{relatedProduct.title}</p>
+                    <p className="font-normal text-center">
+                      {relatedProduct.description}
+                    </p>
+                    <span
+                      className="text-[#01589A] font-semibold"
+                      style={{ marginBottom: "1rem" }}
                     >
-                      <p
-                        className="text-black font-normal font-sans text-xl"
-                        style={{ marginBottom: "0.75rem" }}
-                      >
-                        {review.name}
-                      </p>
-                      <span
-                        className="flex items-center gap-0.5"
-                        style={{ marginBottom: "0.75rem" }}
-                      >
-                        {renderStars(review.rating)}
-                      </span>
-                      <p
-                        className="text-black font-normal font-sans text-md"
-                        style={{ marginBottom: "0.75rem" }}
-                      >
-                        {review.comment}
-                      </p>
-                      <p className="text-gray-500 font-normal font-sans text-md">
-                        {review.date}
-                      </p>
+                      ${relatedProduct.price}
+                    </span>
+                    <div className="flex gap-2" style={{ marginTop: "2rem" }}>
+                      <ShoppingCart
+                        className="cursor-pointer hover:text-blue-700"
+                        onClick={() => addToCart(relatedProduct, 1)}
+                      />
+                      <Heart
+                        className={`cursor-pointer ${
+                          wishlist.some((item) => item.id === relatedProduct.id)
+                            ? "text-red-500"
+                            : "hover:text-red-500"
+                        }`}
+                        onClick={() => toggleWishlist(relatedProduct)}
+                      />
+                      <Eye
+                        className="cursor-pointer hover:text-green-600"
+                        onClick={() => viewProduct(relatedProduct)}
+                      />
                     </div>
-                  ))
-                )}
+                  </div>
+                ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="write-review">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col">
+                <label className="text-black font-sans font-semibold text-lg mb-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter your name"
+                  value={reviewerName}
+                  onChange={(e) => setReviewerName(e.target.value)}
+                  className="bg-[#E6EFF5] border border-solid border-[#E6EFF5] rounded-sm text-black"
+                  style={{ padding: "0.5rem 1rem" }}
+                />
               </div>
+              <div>
+                <label className="text-black font-semibold font-sans text-lg mb-2">
+                  Ratings
+                </label>
+                <Select
+                  value={rating}
+                  onValueChange={(value) => setRating(value)}
+                >
+                  <SelectTrigger
+                    className="w-full bg-[#E6EFF5] border border-solid border-[#E6EFF5] text-[#999]"
+                    style={{ padding: "0.6rem 1rem", borderRadius: "5px" }}
+                  >
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <SelectItem key={value} value={String(value)}>
+                        <div className="flex gap-1">
+                          {Array.from({ length: value }).map((_, i) => (
+                            <Star
+                              key={i}
+                              size={16}
+                              className="text-[#01589A] fill-[#01589A]"
+                            />
+                          ))}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-black font-semibold font-sans text-lg mb-2">
+                  Comments
+                </label>
+                <textarea
+                  rows="5"
+                  className="bg-[#E6EFF5] border border-solid border-[#E6EFF5] rounded-sm text-black"
+                  style={{ padding: "0.5rem 1rem", marginBottom: "2rem" }}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Write your review here..."
+                />
+              </div>
+              <button
+                onClick={handleSubmitReview}
+                disabled={!rating || !comment || !reviewerName}
+                className="w-full bg-[#01589A] text-white text-lg font-sans font-semibold"
+                style={{ padding: "0.6rem 1.5rem", borderRadius: "5px" }}
+              >
+                Submit
+              </button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="all-reviews">
+            {reviews.length === 0 ? (
+              <p className="text-lg text-black">
+                No reviews yet. Be the first to write one!
+              </p>
+            ) : (
+              reviews.map((review, index) => (
+                <div
+                  key={index}
+                  className="border border-solid border-[#F9FBFC] bg-[#F9FBFC] p-4 mb-4"
+                  style={{ borderRadius: "5px" }}
+                >
+                  <p
+                    className="text-black font-normal font-sans text-xl"
+                    style={{ marginBottom: "0.75rem" }}
+                  >
+                    {review.name}
+                  </p>
+                  <span
+                    className="flex items-center gap-0.5"
+                    style={{ marginBottom: "0.75rem" }}
+                  >
+                    {renderStars(review.rating)}
+                  </span>
+                  <p
+                    className="text-black font-normal font-sans text-md"
+                    style={{ marginBottom: "0.75rem" }}
+                  >
+                    {review.comment}
+                  </p>
+                  <p className="text-gray-500 font-normal font-sans text-md">
+                    {review.date}
+                  </p>
+                </div>
+              ))
             )}
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

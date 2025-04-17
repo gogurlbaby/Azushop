@@ -10,6 +10,10 @@
   padding: 1.5rem;
 }
 
+.tabs-container {
+  margin-top: 4rem;
+}
+
 @media (min-width: 992px) {
   .details-container {
     padding: 5.5rem 2.5rem 9.813rem;
@@ -21,5 +25,9 @@
 
   .image-container {
     padding: 3.625rem 7.5rem;
+  }
+
+  .tabs-container {
+    margin-top: 9.625rem;
   }
 }

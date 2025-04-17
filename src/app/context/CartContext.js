@@ -10,6 +10,8 @@ export const CartProvider = ({ children }) => {
   const [isLoggedIn, setisLoggedIn] = useState(false);
 
   const addToCart = (product, quantity = 1) => {
+    const parsedQuantity = parseInt(quantity, 10);
+
     setCart((prevCart) => {
       const existingitem = prevCart.find((item) => item.id === product.id);
       const parsedPrice =
@@ -21,7 +23,7 @@ export const CartProvider = ({ children }) => {
       if (existingitem) {
         return prevCart.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: item.quantity + parsedQuantity }
             : item
         );
       }
@@ -29,7 +31,7 @@ export const CartProvider = ({ children }) => {
         ...prevCart,
         {
           ...productWithNumberPrice,
-          quantity,
+          quantity: parsedQuantity,
           cartItemId: Date.now() + Math.random(),
         },
       ];
@@ -46,7 +48,7 @@ export const CartProvider = ({ children }) => {
     setCart((prevCart) =>
       prevCart.map((item) =>
         item.cartItemId === cartItemId
-          ? { ...item, quantity: newQuantity }
+          ? { ...item, quantity: parseInt(newQuantity, 10) }
           : item
       )
     );
