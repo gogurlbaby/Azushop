@@ -71,7 +71,7 @@ const Cart = () => {
           <div className="text-center mt-8">
             <p className="text-lg text-black mb-4">Your cart is empty.</p>
             <p
-              className="cursor-pointer text-blue-700 text-lg underline"
+              className="cursor-pointer text-blue-700 text-lg"
               onClick={() => router.push("/shop")}
             >
               Shop Your Items Here
@@ -80,7 +80,7 @@ const Cart = () => {
         ) : (
           <>
             <div style={{ marginTop: "3.25rem" }}>
-              <div className="hidden lg:grid lg:grid-cols-12 lg:gap-8 border-b border-[#D9D9D9] py-4">
+              <div className="hidden md:grid md:grid-cols-12 md:gap-8 border-b border-[#D9D9D9] py-4">
                 <p className="col-span-6 font-sans font-semibold text-black text-2xl">
                   Product
                 </p>
@@ -98,13 +98,13 @@ const Cart = () => {
               {cart.map((item) => (
                 <div
                   key={item.cartItemId}
-                  className="cart-flex lg:grid lg:grid-cols-12 lg:gap-8 flex flex-col border-[#D9D9D9] border-b mb-4 py-6"
+                  className="cart-flex md:grid md:grid-cols-12 md:gap-8 flex flex-col border-[#D9D9D9] border-b mb-4 py-6"
                 >
-                  <div className="col-span-6 flex flex-col lg:flex-row items-center gap-4 mb-4 lg:mb-0">
+                  <div className="col-span-6 flex flex-col md:flex-row items-center gap-4 mb-4 md:mb-0">
                     <img
                       src={item.imageUrl}
                       alt={item.title}
-                      className="lg:w-32 md:w-100 w-full object-cover rounded-md"
+                      className="md:w-32 w-full object-cover rounded-md"
                     />
                     <div className="flex flex-col">
                       <p className="font-sans font-semibold text-black text-lg mb-2">
@@ -122,8 +122,8 @@ const Cart = () => {
                     </div>
                   </div>
 
-                  <div className="col-span-2 flex flex-col lg:items-center lg:justify-center mb-4 lg:mb-0">
-                    <span className="font-sans font-semibold text-[#999] mb-2 text-sm lg:hidden">
+                  <div className="col-span-2 flex flex-col md:items-center md:justify-center mb-4 md:mb-0">
+                    <span className="font-sans font-semibold text-[#999] mb-2 text-sm md:hidden">
                       Price
                     </span>
                     <span className="font-sans font-semibold text-black text-base">
@@ -131,8 +131,8 @@ const Cart = () => {
                     </span>
                   </div>
 
-                  <div className="col-span-2 flex flex-col lg:items-center lg:justify-center mb-4 lg:mb-0">
-                    <span className="font-sans font-semibold text-[#999] mb-2 text-sm lg:hidden">
+                  <div className="col-span-2 flex flex-col md:items-center md:justify-center mb-4 md:mb-0">
+                    <span className="font-sans font-semibold text-[#999] mb-2 text-sm md:hidden">
                       Quantity
                     </span>
                     <Select
@@ -154,8 +154,8 @@ const Cart = () => {
                     </Select>
                   </div>
 
-                  <div className="col-span-2 flex flex-col lg:items-center lg:justify-center">
-                    <span className="font-sans font-semibold  mb-2 text-[#999] text-sm lg:hidden">
+                  <div className="col-span-2 flex flex-col md:items-center md:justify-center mb-4 md:mb-0">
+                    <span className="font-sans font-semibold  mb-2 text-[#999] text-sm md:hidden">
                       Total
                     </span>
                     <span className="font-sans font-semibold text-black text-base">
@@ -180,8 +180,8 @@ const Cart = () => {
               <button
                 type="submit"
                 onClick={() => router.push("/checkout")}
-                className="lg:w-[50%] w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
-                style={{ padding: "0.5rem 0", borderRadius: "5px" }}
+                className="md:w-[30%] w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
+                style={{ padding: "0.5rem 1.5rem", borderRadius: "5px" }}
               >
                 Proceed to Checkout
               </button>

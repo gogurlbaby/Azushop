@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const CartContext = createContext();
 
@@ -9,20 +9,56 @@ export const CartProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
   const [isLoggedIn, setisLoggedIn] = useState(false);
 
+  // Load cart and wishlist from localStorage on mount
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+
+    const storedWishlist = localStorage.getItem("wishlist");
+    if (storedWishlist) {
+      setWishlist(JSON.parse(storedWishlist));
+    }
+  }, []);
+
+  // Save cart and wishlist to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
+
   const addToCart = (product, quantity = 1) => {
     const parsedQuantity = parseInt(quantity, 10);
+    const productId = parseInt(product.id, 10); // Normalize id to number
 
     setCart((prevCart) => {
-      const existingitem = prevCart.find((item) => item.id === product.id);
+      const existingItem = prevCart.find(
+        (item) => parseInt(item.id, 10) === productId
+      );
       const parsedPrice =
         typeof product.price === "string"
           ? parseFloat(product.price)
           : product.price;
-      const productWithNumberPrice = { ...product, price: parsedPrice };
+      const productWithNumberPrice = {
+        ...product,
+        price: parsedPrice,
+        id: productId,
+      };
 
-      if (existingitem) {
+      console.log("addToCart", {
+        productId,
+        parsedQuantity,
+        existingItem,
+        prevCart,
+      });
+
+      if (existingItem) {
         return prevCart.map((item) =>
-          item.id === product.id
+          parseInt(item.id, 10) === productId
             ? { ...item, quantity: item.quantity + parsedQuantity }
             : item
         );
@@ -32,7 +68,7 @@ export const CartProvider = ({ children }) => {
         {
           ...productWithNumberPrice,
           quantity: parsedQuantity,
-          cartItemId: Date.now() + Math.random(),
+          cartItemId: `${productId}-${Date.now()}`,
         },
       ];
     });
@@ -47,30 +83,37 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQuantity = (cartItemId, newQuantity) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.cartItemId === cartItemId
-          ? { ...item, quantity: parseInt(newQuantity, 10) }
-          : item
-      )
-    );
+    const parsedNewQuantity = parseInt(newQuantity, 10);
+    if (parsedNewQuantity > 0) {
+      setCart((prevCart) =>
+        prevCart.map((item) =>
+          item.cartItemId === cartItemId
+            ? { ...item, quantity: parsedNewQuantity }
+            : item
+        )
+      );
+    }
   };
 
   const toggleWishlist = (product) => {
-    setWishlist((prevWislist) => {
-      const exists = prevWislist.find((item) => item.id === product.id);
-
+    setWishlist((prevWishlist) => {
+      const productId = parseInt(product.id, 10);
+      const exists = prevWishlist.find(
+        (item) => parseInt(item.id, 10) === productId
+      );
       if (exists) {
-        return prevWislist.filter((item) => item.id !== product.id);
+        return prevWishlist.filter(
+          (item) => parseInt(item.id, 10) !== productId
+        );
       }
-      return [...prevWislist, product];
+      return [...prevWishlist, { ...product, id: productId }];
     });
   };
 
+  console.log("Cart state:", cart);
+
   const login = () => setisLoggedIn(true);
   const logout = () => setisLoggedIn(false);
-
-  console.log("Cart updated", cart);
 
   return (
     <CartContext.Provider

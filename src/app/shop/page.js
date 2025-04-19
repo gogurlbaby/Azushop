@@ -194,7 +194,7 @@ function Shop() {
 
           {/* Products Display */}
           <div
-            className="lg:grid-cols-3 grid grid-cols-1 gap-8"
+            className="xl:grid-cols-4 md:grid-cols-3 grid grid-cols-1 gap-8"
             style={{ marginTop: "5rem" }}
           >
             {filteredProducts.map((product) => (
@@ -204,7 +204,7 @@ function Shop() {
                 key={product.id}
               >
                 <span
-                  className="text-[#01589A] relative self-end"
+                  className="text-[#01589A] self-end"
                   style={{ marginTop: "0.5rem" }}
                 >
                   {product.brand}
@@ -214,10 +214,14 @@ function Shop() {
                   alt={product.title}
                   style={{ marginBottom: "1rem" }}
                 />
-                <p className="font-semibold">{product.title}</p>
-                <p className="font-normal">{product.description}</p>
+                <p className="font-semibold font-sans text-black text-lg text-center">
+                  {product.title}
+                </p>
+                <p className="font-normal font-sans text-black text-base text-center mb-2">
+                  {product.description}
+                </p>
                 <span
-                  className="text-[#01589A] font-semibold"
+                  className="text-[#01589A] font-semibold text-base text-center"
                   style={{ marginBottom: "1rem" }}
                 >
                   ${product.price}

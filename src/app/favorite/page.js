@@ -69,7 +69,7 @@ function Favorite() {
           </div>
         ) : (
           <div
-            className="lg:grid-cols-3 grid grid-cols-1 gap-8"
+            className="xl:grid-cols-4 md:grid-cols-3 grid grid-cols-1 gap-8"
             style={{ paddingTop: "5rem" }}
           >
             {wishlist.map((product) => (
@@ -79,7 +79,7 @@ function Favorite() {
                 style={{ padding: "0.5rem 1rem 1.5rem" }}
               >
                 <span
-                  className="text-[#01589A] relative lg:left-[8.5rem] left-[7rem]"
+                  className="text-[#01589A] self-end"
                   style={{ marginTop: "0.5rem" }}
                 >
                   {product.brand}

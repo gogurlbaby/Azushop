@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar, Container, Nav, Offcanvas } from "react-bootstrap";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   House,
   ShoppingBag,
@@ -14,21 +14,27 @@ import {
 import "../styles/navbar.css";
 import { useCart } from "../context/CartContext";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
 
 function NavBar() {
   const [active, setActive] = useState("home");
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { cart, wishlist, login } = useCart();
+
+  useEffect(() => {
+    const auth = searchParams.get("auth");
+    if (auth) {
+      setLoginOpen(true);
+      setRegisterOpen(false);
+    } else if (auth === "register") {
+      setRegisterOpen(true);
+      setLoginOpen(false);
+    }
+  }, [searchParams]);
 
   const handleNavClick = (navItem, route) => {
     setActive(navItem);
@@ -53,10 +59,7 @@ function NavBar() {
     <div>
       <Navbar expand="lg" className="navbar">
         <Container fluid>
-          <Navbar.Brand
-            className="navbar-brand"
-            onClick={() => router.push("/")}
-          >
+          <Navbar.Brand className="navbar-brand" href="/">
             <p className="logo">Azushop</p>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -113,164 +116,42 @@ function NavBar() {
                 </Nav.Link>
               </Nav>
               <Nav className="justify-content-end flex-grow-1 pe-3 gap-3 mt-3 mt-lg-0">
-                <Dialog
+                <LoginModal
                   open={loginOpen}
                   onOpenChange={setLoginOpen}
-                  style={{ padding: "2.5rem 5rem" }}
+                  onToggle={() => {
+                    setLoginOpen(false);
+                    setRegisterOpen(true);
+                  }}
+                  onSubmit={handleLoginSubmit}
                 >
-                  <DialogTrigger asChild>
-                    <Nav.Link
-                      variant="ghost"
-                      className="nav-link"
-                      onClick={() => setLoginOpen(true)}
-                    >
-                      <LogIn />
-                      Login
-                    </Nav.Link>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle
-                        className="text-black text-2xl font-sans font-normal text-left"
-                        style={{ padding: "1rem" }}
-                      >
-                        Login
-                      </DialogTitle>
-                    </DialogHeader>
-                    <form
-                      onSubmit={handleLoginSubmit}
-                      className="space-y-4"
-                      style={{ padding: "1rem" }}
-                    >
-                      <div>
-                        <Input
-                          type="email"
-                          placeholder="Email address *"
-                          required
-                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
-                          style={{
-                            padding: "0.5rem 1.5rem",
-                            borderRadius: "5px",
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <Input
-                          type="password"
-                          placeholder="Password *"
-                          required
-                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
-                          style={{
-                            padding: "0.5rem 1.5rem",
-                            borderRadius: "5px",
-                            marginTop: "2rem",
-                          }}
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
-                        style={{
-                          padding: "0.5rem 0",
-                          borderRadius: "5px",
-                          marginTop: "2rem",
-                        }}
-                      >
-                        Login
-                      </button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
+                  <Nav.Link
+                    variant="ghost"
+                    className="nav-link"
+                    onClick={() => setLoginOpen(true)}
+                  >
+                    <LogIn />
+                    Login
+                  </Nav.Link>
+                </LoginModal>
 
-                <Dialog open={registerOpen} onOpenChange={setRegisterOpen}>
-                  <DialogTrigger asChild>
-                    <Nav.Link
-                      className="nav-link"
-                      onClick={() => setRegisterOpen(true)}
-                    >
-                      <User />
-                      Register
-                    </Nav.Link>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle
-                        className="text-black text-2xl font-sans font-normal text-left"
-                        style={{ padding: "1rem" }}
-                      >
-                        Register
-                      </DialogTitle>
-                    </DialogHeader>
-                    <form
-                      onSubmit={handleRegisterSubmit}
-                      className="space-y-4"
-                      style={{ padding: "1rem" }}
-                    >
-                      <div>
-                        <Input
-                          type="text"
-                          placeholder="Full name"
-                          required
-                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
-                          style={{
-                            padding: "0.5rem 1.5rem",
-                            borderRadius: "5px",
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <Input
-                          type="email"
-                          placeholder="Email address *"
-                          required
-                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
-                          style={{
-                            padding: "0.5rem 1.5rem",
-                            borderRadius: "5px",
-                            marginTop: "2rem",
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <Input
-                          type="password"
-                          placeholder="Password *"
-                          required
-                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
-                          style={{
-                            padding: "0.5rem 1.5rem",
-                            borderRadius: "5px",
-                            marginTop: "2rem",
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <Input
-                          type="confirmPassword"
-                          placeholder="Confirm password *"
-                          required
-                          className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
-                          style={{
-                            padding: "0.5rem 1.5rem",
-                            borderRadius: "5px",
-                            marginTop: "2rem",
-                          }}
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
-                        style={{
-                          padding: "0.5rem 0",
-                          borderRadius: "5px",
-                          marginTop: "2rem",
-                        }}
-                      >
-                        Register
-                      </button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
+                <RegisterModal
+                  open={registerOpen}
+                  onOpenChange={setRegisterOpen}
+                  onToggle={() => {
+                    setRegisterOpen(false);
+                    setLoginOpen(true);
+                  }}
+                  onSubmit={handleRegisterSubmit}
+                >
+                  <Nav.Link
+                    className="nav-link"
+                    onClick={() => setRegisterOpen(true)}
+                  >
+                    <User />
+                    Register
+                  </Nav.Link>
+                </RegisterModal>
               </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>

@@ -5,16 +5,15 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 function Hero() {
-  const plugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
+  const plugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: false }));
   const router = useRouter();
+
   useEffect(() => {
     const currentPlugin = plugin.current;
     return () => {
@@ -45,7 +44,11 @@ function Hero() {
 
   return (
     <div className="w-screen relative">
-      <Carousel plugins={[plugin.current]} className="w-full">
+      <Carousel
+        opts={{ loop: true }}
+        plugins={[plugin.current]}
+        className="w-full"
+      >
         <CarouselContent>
           {slides.map((slide, index) => (
             <CarouselItem key={index} className="w-screen relative">

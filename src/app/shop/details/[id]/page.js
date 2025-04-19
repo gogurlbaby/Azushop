@@ -214,7 +214,7 @@ function ProductDetails({ params }) {
 
       <div className="tabs-container w-full max-w-7xl">
         <Tabs defaultValue="related" className="w-full">
-          <TabsList className="lg:grid-cols-3 grid grid-cols-1 w-full gap-4 sticky top-0 bg-white z-10">
+          <TabsList className="md:grid-cols-3 grid grid-cols-1 w-full gap-4 sticky top-0 bg-white z-10">
             <TabsTrigger value="related">Related Products</TabsTrigger>
             <TabsTrigger value="write-review">Write Your Review</TabsTrigger>
             <TabsTrigger value="all-reviews">
@@ -223,7 +223,7 @@ function ProductDetails({ params }) {
           </TabsList>
 
           <TabsContent value="related">
-            <div className="tabs-content-margin lg:flex-row flex flex-col gap-4 overflow-x-auto">
+            <div className="tabs-content-margin md:flex-row flex flex-col gap-4 overflow-x-auto">
               {products
                 .filter(
                   (p) => p.category === product.category && p.id !== product.id
