@@ -38,6 +38,8 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  console.log("Add to Cart", addToCart);
+
   const removeFromCart = (cartItemId) => {
     setCart((prevCart) =>
       prevCart.filter((item) => item.cartItemId !== cartItemId)
@@ -67,6 +69,8 @@ export const CartProvider = ({ children }) => {
 
   const login = () => setisLoggedIn(true);
   const logout = () => setisLoggedIn(false);
+
+  console.log("Cart updated", cart);
 
   return (
     <CartContext.Provider

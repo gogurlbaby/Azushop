@@ -10,6 +10,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slash } from "lucide-react";
 import "../styles/cart.css";
 import { useCart } from "../context/CartContext";
@@ -37,8 +44,8 @@ const Cart = () => {
     <>
       <Banner title="Cart" />
 
-      <div className="cart-container">
-        <Breadcrumb className="flex justify-center items-center">
+      <div className="cart-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Breadcrumb className="flex justify-center items-center mb-8">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink
@@ -61,55 +68,45 @@ const Cart = () => {
         </Breadcrumb>
 
         {cart.length === 0 ? (
-          <div>
-            <p className="text-center mt-8">Your cart is empty.</p>
+          <div className="text-center mt-8">
+            <p className="text-lg text-black mb-4">Your cart is empty.</p>
             <p
-              className=" cursor-pointer text-center text-blue-700 text-lg"
+              className="cursor-pointer text-blue-700 text-lg underline"
               onClick={() => router.push("/shop")}
             >
-              Shop Your Items Here.
+              Shop Your Items Here
             </p>
           </div>
         ) : (
           <>
-            <div className="flex flex-col" style={{ marginBottom: "3.25rem" }}>
-              <div>
-                <div
-                  className="flex justify-between items-center"
-                  style={{ marginBottom: "2.5rem" }}
-                >
-                  <p className="font-sans font-semibold text-black text-2xl">
-                    Product
-                  </p>
-                  <div className="flex" style={{ gap: "4rem" }}>
-                    <p className="font-sans font-semibold text-black text-2xl">
-                      Price
-                    </p>
-                    <p className="font-sans font-semibold text-black text-2xl">
-                      Quantity
-                    </p>
-                    <p className="font-sans font-semibold text-black text-2xl">
-                      Total
-                    </p>
-                  </div>
-                </div>
+            <div style={{ marginTop: "3.25rem" }}>
+              <div className="hidden lg:grid lg:grid-cols-12 lg:gap-8 border-b border-[#D9D9D9] py-4">
+                <p className="col-span-6 font-sans font-semibold text-black text-2xl">
+                  Product
+                </p>
+                <p className="col-span-2 font-sans font-semibold text-black text-2xl text-center">
+                  Price
+                </p>
+                <p className="col-span-2 font-sans font-semibold text-black text-2xl text-center">
+                  Quantity
+                </p>
+                <p className="col-span-2 font-sans font-semibold text-black text-2xl text-center">
+                  Total
+                </p>
+              </div>
 
-                {cart.map((item) => (
-                  <div
-                    key={item.cartItemId}
-                    className="flex justify-center items-center border-t-1 border-t-solid border-t-[#D9D9D9] border-b-1 border-b-solid border-b-[#D9D9D9]"
-                    style={{
-                      padding: "2.5rem 0",
-                      marginBottom: "3rem",
-                      gap: "4rem",
-                    }}
-                  >
+              {cart.map((item) => (
+                <div
+                  key={item.cartItemId}
+                  className="cart-flex lg:grid lg:grid-cols-12 lg:gap-8 flex flex-col border-[#D9D9D9] border-b mb-4 py-6"
+                >
+                  <div className="col-span-6 flex flex-col lg:flex-row items-center gap-4 mb-4 lg:mb-0">
                     <img
                       src={item.imageUrl}
                       alt={item.title}
-                      className="lg:w-[35%] w-[50%]"
+                      className="lg:w-32 md:w-100 w-full object-cover rounded-md"
                     />
-                    <div className="flex flex-col justify-center">
+                    <div className="flex flex-col">
                       <p className="font-sans font-semibold text-black text-lg mb-2">
                         {item.title}
                       </p>
@@ -117,67 +114,61 @@ const Cart = () => {
                         Brand: <span className="text-black">{item.brand}</span>
                       </p>
                       <button
-                        className="text-[#EB001B] flex justify-start font-sans font-semibold text-md underline"
+                        className="text-[#EB001B] font-sans font-semibold text-md underline text-left"
                         onClick={() => removeFromCart(item.cartItemId)}
                       >
                         Remove
                       </button>
                     </div>
-
-                    <div>
-                      {cart.map((item) => (
-                        <span
-                          key={item.cartItemId}
-                          className="font-sans font-semibold text-black text-base"
-                        >
-                          ${item.price.toFixed(2)}
-                        </span>
-                      ))}
-                    </div>
-                    <div>
-                      {cart.map((item) => (
-                        <select
-                          key={item.cartItemId}
-                          value={item.quantity}
-                          onChange={(e) =>
-                            handleQuantityChange(
-                              item.cartItemId,
-                              e.target.value
-                            )
-                          }
-                          className="bg-[#E6EFF5] rounded-sm text-[#999] border border-solid border-[#E6EFF5]"
-                          style={{
-                            padding: "0.5rem 1rem",
-                          }}
-                        >
-                          {[...Array(10).keys()].map((x) => (
-                            <option key={x + 1} value={x + 1}>
-                              {x + 1}
-                            </option>
-                          ))}
-                        </select>
-                      ))}
-                    </div>
-                    <div>
-                      {cart.map((item) => (
-                        <span
-                          key={item.cartItemId}
-                          className="font-sans font-semibold text-black text-base"
-                        >
-                          $
-                          {(
-                            getNumericPrice(item.price) * item.quantity
-                          ).toFixed(2)}
-                        </span>
-                      ))}
-                    </div>
                   </div>
-                ))}
-              </div>
+
+                  <div className="col-span-2 flex flex-col lg:items-center lg:justify-center mb-4 lg:mb-0">
+                    <span className="font-sans font-semibold text-[#999] mb-2 text-sm lg:hidden">
+                      Price
+                    </span>
+                    <span className="font-sans font-semibold text-black text-base">
+                      ${getNumericPrice(item.price).toFixed(2)}
+                    </span>
+                  </div>
+
+                  <div className="col-span-2 flex flex-col lg:items-center lg:justify-center mb-4 lg:mb-0">
+                    <span className="font-sans font-semibold text-[#999] mb-2 text-sm lg:hidden">
+                      Quantity
+                    </span>
+                    <Select
+                      value={String(item.quantity)}
+                      onValueChange={(value) =>
+                        handleQuantityChange(item.cartItemId, value)
+                      }
+                    >
+                      <SelectTrigger className="bg-[#E6EFF5] rounded-md text-[#999] border border-[#E6EFF5]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[...Array(10).keys()].map((x) => (
+                          <SelectItem key={x + 1} value={String(x + 1)}>
+                            {x + 1}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="col-span-2 flex flex-col lg:items-center lg:justify-center">
+                    <span className="font-sans font-semibold  mb-2 text-[#999] text-sm lg:hidden">
+                      Total
+                    </span>
+                    <span className="font-sans font-semibold text-black text-base">
+                      $
+                      {(getNumericPrice(item.price) * item.quantity).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
 
             <div>
-              <p className="font-sans font-semibold text-black text-2xl mb-4">
+              <p className="font-sans font-semibold text-black text-2xl my-4">
                 Items: <span>{cart.length}</span>
               </p>
               <p

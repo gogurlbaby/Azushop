@@ -227,6 +227,7 @@ function Shop() {
                     className="cursor-pointer hover:text-blue-700"
                     onClick={() => addToCart(product, 1)}
                   />
+
                   <Heart
                     className={`cursor-pointer ${
                       wishlist.some((item) => item.id === product.id)

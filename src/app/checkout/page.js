@@ -79,7 +79,7 @@ function Checkout() {
             onSubmit={handleSubmit}
           >
             {({ errors, touched, values, handleChange }) => (
-              <Form className="lg:flex-row lg:justify-between flex flex-col">
+              <Form className="lg:flex-row lg:justify-around flex flex-col">
                 <div className="">
                   <p
                     className="font-sans font-semibold text-black text-2xl"
@@ -186,13 +186,13 @@ function Checkout() {
                       className="bg-[#F9FBFC] flex justify-between items-center border-b-1 border-b-solid border-b-[#D9D9D9]"
                       style={{ padding: "2.5rem 0", marginBottom: "2rem" }}
                     >
-                      <div className="flex gap-0.5">
+                      <div className="lg:flex-row flex flex-col gap-0.5">
                         <img
                           src={item.imageUrl}
                           alt={item.title}
-                          className="w-[30%]"
+                          className="lg:w-32 md:w-100 w-full object-cover rounded-md"
                         />
-                        <div>
+                        <div className="">
                           <p className="font-sans font-semibold text-black text-md mb-2">
                             {item.title}
                           </p>
@@ -205,7 +205,7 @@ function Checkout() {
                           </span>
                         </div>
                       </div>
-                      <span className="font-sans font-semibold text-black text-lg mb-2">
+                      <span className="lg:block hidden font-sans font-semibold text-black text-lg mb-2">
                         ${(item.price * item.quantity).toFixed(2)}
                       </span>
                     </div>

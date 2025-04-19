@@ -21,9 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import "../../../styles/shop_details.css";
 
 function ProductDetails({ params }) {
@@ -33,7 +30,7 @@ function ProductDetails({ params }) {
   const router = useRouter();
 
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState("1");
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [reviews, setReviews] = useState([]);
@@ -45,6 +42,10 @@ function ProductDetails({ params }) {
         (product) => product.id === parseInt(id)
       );
       setProduct(foundProduct);
+      console.log("Product loaded", {
+        foundProduct,
+        inStock: foundProduct?.inStock,
+      });
 
       const storedReviews = localStorage.getItem(`reviews_${id}`);
       if (storedReviews) {
@@ -62,7 +63,11 @@ function ProductDetails({ params }) {
   if (!product) return <div>Loading...</div>;
 
   // Parsed inStock string here
-  const isInStock = product.inStock === "In Stock";
+  const isInStock = product.inStock
+    ? product.inStock.toLowerCase().includes("in stock")
+    : true;
+
+  const totalPrice = (product.price * parseInt(quantity, 10)).toFixed(2);
 
   const handleSubmitReview = () => {
     if (rating && comment && reviewerName) {
@@ -163,16 +168,25 @@ function ProductDetails({ params }) {
             className="text-[#01589A] font-semibold font-sans text-3xl"
             style={{ marginBottom: "1.25rem" }}
           >
-            ${product.price}
+            ${totalPrice}{" "}
+            {quantity > "1" && <span>(Unit: ${product.price})</span>}
           </p>
 
           <span>{product.inStock}</span>
 
-          <Select value={quantity} onValueChange={setQuantity}>
+          <Select
+            value={quantity}
+            onValueChange={(value) => {
+              console.log("Quantity changed", { newValue: value });
+              setQuantity(value);
+            }}
+          >
             <SelectTrigger
-              className="bg-[#E6EFF5] rounded-sm text-[#999] border border-solid border-[#E6EFF5]"
+              className="bg-[#E6EFF5] rounded-sm text-[#999] border border-solid border-[#E6EFF5] w-[100px]"
               style={{ padding: "0.5rem 1rem", margin: "1rem 0" }}
-            ></SelectTrigger>
+            >
+              <SelectValue placeholder="Qty" />
+            </SelectTrigger>
 
             <SelectContent>
               {[...Array(10).keys()].map((x) => (
@@ -184,7 +198,11 @@ function ProductDetails({ params }) {
           </Select>
 
           <button
-            onClick={() => addToCart(product, parseInt(quantity, 10))}
+            onClick={() => {
+              const parsedQuantity = parseInt(quantity, 10);
+              console.log("Add to Cart clicked", { product, parsedQuantity });
+              addToCart(product, parsedQuantity);
+            }}
             className="w-full cursor-pointer flex justify-center items-center bg-[#01589A] text-white text-lg font-sans font-semibold"
             style={{ padding: "0.6rem 1.5rem", borderRadius: "5px" }}
             disabled={!isInStock}
@@ -196,7 +214,7 @@ function ProductDetails({ params }) {
 
       <div className="tabs-container w-full max-w-7xl">
         <Tabs defaultValue="related" className="w-full">
-          <TabsList className="lg:grid-cols-3 grid grid-cols-1 w-full gap-4">
+          <TabsList className="lg:grid-cols-3 grid grid-cols-1 w-full gap-4 sticky top-0 bg-white z-10">
             <TabsTrigger value="related">Related Products</TabsTrigger>
             <TabsTrigger value="write-review">Write Your Review</TabsTrigger>
             <TabsTrigger value="all-reviews">
@@ -205,7 +223,7 @@ function ProductDetails({ params }) {
           </TabsList>
 
           <TabsContent value="related">
-            <div className="lg:flex-row flex flex-col gap-4 overflow-x-auto">
+            <div className="tabs-content-margin lg:flex-row flex flex-col gap-4 overflow-x-auto">
               {products
                 .filter(
                   (p) => p.category === product.category && p.id !== product.id
@@ -264,7 +282,10 @@ function ProductDetails({ params }) {
             </div>
           </TabsContent>
 
-          <TabsContent value="write-review">
+          <TabsContent
+            value="write-review"
+            className="tabs-content-margin lg:w-0 lg:min-w-md w-full mx-auto"
+          >
             <div className="flex flex-col gap-4">
               <div className="flex flex-col">
                 <label className="text-black font-sans font-semibold text-lg mb-2">
@@ -334,7 +355,7 @@ function ProductDetails({ params }) {
             </div>
           </TabsContent>
 
-          <TabsContent value="all-reviews">
+          <TabsContent value="all-reviews" className="tabs-content-margin">
             {reviews.length === 0 ? (
               <p className="text-lg text-black">
                 No reviews yet. Be the first to write one!
