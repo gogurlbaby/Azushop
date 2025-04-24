@@ -16,10 +16,15 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useCart } from "../context/CartContext";
 import { useRouter } from "next/navigation";
+import { countries } from "countries-list";
 
 function Checkout() {
   const { cart, isLoggedIn } = useCart();
   const router = useRouter();
+
+  const countryNames = Object.values(countries)
+    .map((c) => c.name)
+    .sort();
 
   const checkoutSchema = Yup.object().shape({
     address: Yup.string()
@@ -50,11 +55,9 @@ function Checkout() {
       )
       .required("Please enter your postal code"),
     country: Yup.string()
-      .trim()
-      .min(2, "Country must be at least 2 characters long")
-      .max(50, "Country cannot exceed 50 characters")
-      .matches(/^[a-zA-Z\s]+$/, "Country can only contain letters or spaces")
-      .required("Please enter your country"),
+      .oneOf(countryNames, "Please select a valid country")
+      .required("Please select your country"),
+    selectMethod: Yup.string().required("Please select a payment method"),
   });
 
   const calculateShippingFee = (cartTotal, country) => {
@@ -133,13 +136,20 @@ function Checkout() {
                 city: "",
                 postalCode: "",
                 country: "",
+                selectMethod: "",
               }}
               validationSchema={checkoutSchema}
               onSubmit={handleSubmit}
             >
-              {({ errors, touched, values }) => {
+              {({ errors, touched, values, setFieldValue }) => {
                 const shippingFee = calculateShippingFee(total, values.country);
                 const taxFee = calculateTaxFee(total, values.country);
+                console.log("Checkout state:", {
+                  country: values.country,
+                  shippingFee,
+                  taxFee,
+                  total,
+                });
                 return (
                   <Form className="lg:flex-row lg:justify-around flex flex-col">
                     <div className="">
@@ -208,7 +218,7 @@ function Checkout() {
                       </div>
                       <div>
                         <Field
-                          type="text"
+                          as="select"
                           name="country"
                           id="country"
                           placeholder="Country"
@@ -218,7 +228,18 @@ function Checkout() {
                             borderRadius: "5px",
                             marginTop: "2rem",
                           }}
-                        />
+                          onChange={(e) => {
+                            console.log("Country selected:", e.target.value);
+                            setFieldValue("country", e.target.value);
+                          }}
+                        >
+                          <option value="">Select a country *</option>
+                          {countryNames.map((country) => (
+                            <option key={country} value={country}>
+                              {country}
+                            </option>
+                          ))}
+                        </Field>
                         {errors.country && touched.country ? (
                           <div className="text-red-500 text-sm mt-1">
                             {errors.country}

@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { ArrowUpRight } from "lucide-react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
@@ -45,13 +45,13 @@ function RegisterModal({ open, onOpenChange, onToggle, onSubmit, children }) {
               confirmPassword: "",
             }}
             validationSchema={registerModalSchema}
-            onSubmit={(values) => {
+            onSubmit={(values, { setSubmitting }) => {
               console.log(values);
             }}
           >
-            {({ errors, touched }) => (
+            {({ errors, touched, handleSubmit, isSubmitting }) => (
               <Form
-                onSubmit={onSubmit}
+                onSubmit={handleSubmit}
                 className="space-y-4"
                 style={{ padding: "1rem" }}
               >
@@ -132,6 +132,7 @@ function RegisterModal({ open, onOpenChange, onToggle, onSubmit, children }) {
                 ) : null}
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full bg-[#01589A] flex justify-center items-center border border-solid border-[#01589A] text-white text-lg font-sans font-semibold"
                   style={{
                     padding: "0.5rem 0",
@@ -142,7 +143,7 @@ function RegisterModal({ open, onOpenChange, onToggle, onSubmit, children }) {
                   Register
                 </button>
                 <p
-                  className="text-black text-md font-sans font-normal text-center underline cursor-pointer"
+                  className="flex gap-1 justify-center items-center text-black text-md font-sans font-normal text-center underline cursor-pointer"
                   style={{ marginTop: "2rem" }}
                 >
                   Already have an account?{" "}
@@ -152,6 +153,7 @@ function RegisterModal({ open, onOpenChange, onToggle, onSubmit, children }) {
                   >
                     Login
                   </span>
+                  <ArrowUpRight size={20} className="text-black" />
                 </p>
               </Form>
             )}

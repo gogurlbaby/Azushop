@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Navbar, Container, Nav, Offcanvas } from "react-bootstrap";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   House,
   ShoppingBag,
@@ -16,25 +16,16 @@ import { useCart } from "../context/CartContext";
 import { Badge } from "@/components/ui/badge";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
+import { Suspense } from "react";
+import AuthHandler from "./AuthHandler";
+import CartWishlistBadges from "./CartWishlistBadges";
 
 function NavBar() {
   const [active, setActive] = useState("home");
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { cart, wishlist, login } = useCart();
-
-  useEffect(() => {
-    const auth = searchParams.get("auth");
-    if (auth) {
-      setLoginOpen(true);
-      setRegisterOpen(false);
-    } else if (auth === "register") {
-      setRegisterOpen(true);
-      setLoginOpen(false);
-    }
-  }, [searchParams]);
 
   const handleNavClick = (navItem, route) => {
     setActive(navItem);
@@ -57,6 +48,12 @@ function NavBar() {
 
   return (
     <div>
+      <Suspense fallback={<div></div>}>
+        <AuthHandler
+          setLoginOpen={setLoginOpen}
+          setRegisterOpen={setRegisterOpen}
+        />
+      </Suspense>
       <Navbar expand="lg" className="navbar">
         <Container fluid>
           <Navbar.Brand className="navbar-brand" href="/">
@@ -93,11 +90,7 @@ function NavBar() {
                 >
                   <ShoppingCart />
                   Cart
-                  {cart.length > 0 && (
-                    <Badge className="bg-[#01589A] py-1 px-2">
-                      {cart.length}
-                    </Badge>
-                  )}
+                  {cart.length > 0 && <CartWishlistBadges type="cart" />}
                 </Nav.Link>
                 <Nav.Link
                   className={`nav-link ${
@@ -108,10 +101,7 @@ function NavBar() {
                   <Heart />
                   Favorite
                   {wishlist.length > 0 && (
-                    <Badge className="bg-[#01589A] py-1 px-2">
-                      {" "}
-                      {wishlist.length}
-                    </Badge>
+                    <CartWishlistBadges type="wishlist" />
                   )}
                 </Nav.Link>
               </Nav>

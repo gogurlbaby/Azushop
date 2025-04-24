@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import { CartProvider } from "./context/CartContext";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,9 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
-          <NavBar />
+          <Suspense fallback={<div>Loading navigation...</div>}>
+            <NavBar />
+          </Suspense>
           {children}
           <Footer />
         </CartProvider>
