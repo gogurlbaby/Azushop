@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 
 export default function CartWishlistBadges({ type }) {
   const { cart, wishlist } = useCart();

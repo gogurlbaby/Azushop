@@ -7,9 +7,11 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
-  const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [userName, setUserName] = useState("");
 
-  // Load cart and wishlist from localStorage on mount
+  // Load cart, wishlist, and orders from localStorage on mount
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -20,9 +22,24 @@ export const CartProvider = ({ children }) => {
     if (storedWishlist) {
       setWishlist(JSON.parse(storedWishlist));
     }
+
+    const storedOrders = localStorage.getItem("orders");
+    if (storedOrders) {
+      setOrders(JSON.parse(storedOrders));
+    }
+
+    const token = localStorage.getItem("token");
+    const savedUserName = localStorage.getItem("userName");
+
+    if (token && savedUserName) {
+      setIsLoggedIn(true);
+      setUserName(savedUserName);
+    } else {
+      setIsLoggedIn(false);
+    }
   }, []);
 
-  // Save cart and wishlist to localStorage when they change
+  // Save cart, wishlist, and orders to localStorage when they change
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
@@ -31,9 +48,30 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
+  useEffect(() => {
+    localStorage.setItem("orders", JSON.stringify(orders));
+  }, [orders]);
+
+  // Simulate delivery status update (for demo purposes)
+  useEffect(() => {
+    if (orders.length > 0) {
+      const timer = setTimeout(() => {
+        setOrders((prevOrders) =>
+          prevOrders.map((order) => {
+            if (order.status === "pending" && Math.random() > 0.5) {
+              return { ...order, status: "delivered" };
+            }
+            return order;
+          })
+        );
+      }, 5000); // Simulate delivery after 5 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [orders]);
+
   const addToCart = (product, quantity = 1) => {
     const parsedQuantity = parseInt(quantity, 10);
-    const productId = parseInt(product.id, 10); // Normalize id to number
+    const productId = parseInt(product.id, 10);
 
     setCart((prevCart) => {
       const existingItem = prevCart.find(
@@ -112,21 +150,78 @@ export const CartProvider = ({ children }) => {
 
   console.log("Cart state:", cart);
 
-  const login = () => setisLoggedIn(true);
-  const logout = () => setisLoggedIn(false);
+  const createOrder = () => {
+    if (cart.length === 0) {
+      return {
+        success: false,
+        message: "Cart is empty",
+      };
+    }
+
+    const total = cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    const order = {
+      id: `order-${Date.now()}`,
+      items: [...cart],
+      total,
+      date: new Date().toISOString(),
+      status: "pending", // Initial status
+    };
+
+    setOrders((prevOrders) => [...prevOrders, order]);
+    setCart([]);
+    localStorage.removeItem("cart");
+    return { success: true, message: "Order created successfully" };
+  };
+
+  // Function to manually toggle order status for testing
+  const toggleOrderStatus = (orderId) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order.id === orderId
+          ? {
+              ...order,
+              status: order.status === "pending" ? "delivered" : "pending",
+            }
+          : order
+      )
+    );
+  };
+
+  const login = (name) => {
+    setIsLoggedIn(true);
+    setUserName(name);
+    localStorage.setItem("userName", name);
+  };
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    setUserName("");
+    localStorage.removeItem("token");
+    setCart([]);
+    setWishlist([]);
+    localStorage.removeItem("cart");
+    localStorage.removeItem("wishlist");
+  };
 
   return (
     <CartContext.Provider
       value={{
         cart,
         wishlist,
+        orders,
         addToCart,
         removeFromCart,
         updateQuantity,
         toggleWishlist,
+        createOrder,
+        toggleOrderStatus,
         isLoggedIn,
         login,
         logout,
+        userName,
       }}
     >
       {children}

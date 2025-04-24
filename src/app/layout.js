@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/navbar/NavBar";
 import Footer from "./components/Footer";
 import { CartProvider } from "./context/CartContext";
 import { Suspense } from "react";

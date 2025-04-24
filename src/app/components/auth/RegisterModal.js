@@ -10,16 +10,26 @@ import {
 import { ArrowUpRight } from "lucide-react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { Loader2 } from "lucide-react";
+import { useCart } from "@/app/context/CartContext";
+import { handleAuthSubmit } from "@/app/utils/auth";
 
-function LoginModal({ open, onOpenChange, onToggle, onSubmit, children }) {
-  const loginModalSchema = Yup.object().shape({
+function RegisterModal({ open, onOpenChange, onToggle, onSubmit, children }) {
+  const { login } = useCart();
+
+  const registerModalSchema = Yup.object().shape({
+    fullName: Yup.string().required("Please enter your Full name address"),
     email: Yup.string()
       .email("Invalid email address")
       .required("Please enter your Email address"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
       .required("Please enter your password"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Please Confirm your Password"),
   });
+
   return (
     <>
       {children}
@@ -30,15 +40,28 @@ function LoginModal({ open, onOpenChange, onToggle, onSubmit, children }) {
               className="text-black text-2xl font-sans font-normal text-left"
               style={{ padding: "1rem" }}
             >
-              Login
+              Register
             </DialogTitle>
           </DialogHeader>
           <Formik
-            initialValues={{ email: "", password: "" }}
-            validationSchema={loginModalSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
+            initialValues={{
+              fullName: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
             }}
+            validationSchema={registerModalSchema}
+            onSubmit={(values, { setSubmitting, setErrors }) =>
+              handleAuthSubmit({
+                values,
+                login,
+                onSubmit,
+                setSubmitting,
+                setErrors,
+                isLogin: false,
+                role: "user",
+              })
+            }
           >
             {({ errors, touched, handleSubmit, isSubmitting }) => (
               <Form
@@ -46,6 +69,25 @@ function LoginModal({ open, onOpenChange, onToggle, onSubmit, children }) {
                 className="space-y-4"
                 style={{ padding: "1rem" }}
               >
+                <div>
+                  <Field
+                    type="text"
+                    name="fullName"
+                    id="fullName"
+                    placeholder="Full name"
+                    className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                    style={{
+                      padding: "0.5rem 1.5rem",
+                      borderRadius: "5px",
+                    }}
+                    disabled={isSubmitting}
+                  />
+                </div>
+                {errors.fullName && touched.fullName ? (
+                  <div className="text-red-500 text-sm mt-1">
+                    {errors.fullName}
+                  </div>
+                ) : null}
                 <div>
                   <Field
                     type="email"
@@ -56,7 +98,9 @@ function LoginModal({ open, onOpenChange, onToggle, onSubmit, children }) {
                     style={{
                       padding: "0.5rem 1.5rem",
                       borderRadius: "5px",
+                      marginTop: "2rem",
                     }}
+                    disabled={isSubmitting}
                   />
                 </div>
                 {errors.email && touched.email ? (
@@ -76,11 +120,32 @@ function LoginModal({ open, onOpenChange, onToggle, onSubmit, children }) {
                       borderRadius: "5px",
                       marginTop: "2rem",
                     }}
+                    disabled={isSubmitting}
                   />
                 </div>
                 {errors.password && touched.password ? (
                   <div className="text-red-500 text-sm mt-1">
                     {errors.password}
+                  </div>
+                ) : null}
+                <div>
+                  <Field
+                    type="password"
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    placeholder="Confirm password *"
+                    className="xl:w-[30rem] w-full border border-solid border-[#E6EFF5] bg-[#E6EFF5] text-black"
+                    style={{
+                      padding: "0.5rem 1.5rem",
+                      borderRadius: "5px",
+                      marginTop: "2rem",
+                    }}
+                    disabled={isSubmitting}
+                  />
+                </div>
+                {errors.confirmPassword && touched.confirmPassword ? (
+                  <div className="text-red-500 text-sm mt-1">
+                    {errors.confirmPassword}
                   </div>
                 ) : null}
                 <button
@@ -93,18 +158,25 @@ function LoginModal({ open, onOpenChange, onToggle, onSubmit, children }) {
                     marginTop: "2rem",
                   }}
                 >
-                  Login
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin mr-2" />{" "}
+                      Registering...
+                    </>
+                  ) : (
+                    "Register"
+                  )}
                 </button>
                 <p
                   className="flex gap-1 justify-center items-center text-black text-md font-sans font-normal text-center underline cursor-pointer"
                   style={{ marginTop: "2rem" }}
                 >
-                  Don’t have an account?{" "}
+                  Already have an account?{" "}
                   <span
-                    className="text-blue-500 cursor-pointer "
+                    className="text-blue-500 cursor-pointer"
                     onClick={onToggle}
                   >
-                    Register
+                    Login
                   </span>
                   <ArrowUpRight size={20} className="text-black" />
                 </p>
@@ -117,4 +189,4 @@ function LoginModal({ open, onOpenChange, onToggle, onSubmit, children }) {
   );
 }
 
-export default LoginModal;
+export default RegisterModal;
