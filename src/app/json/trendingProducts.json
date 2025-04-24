@@ -1,0 +1,20 @@
+[
+  {
+    "id": 0,
+    "title": "Macbook",
+    "heading": "Up to 50% off laptop",
+    "image_Url": "/images/computer.svg"
+  },
+  {
+    "id": 1,
+    "title": "Iphones",
+    "heading": "Free shipping",
+    "image_Url": "/images/phones.svg"
+  },
+  {
+    "id": 2,
+    "title": "Digital Lens",
+    "heading": "Up to 40% off Camera",
+    "image_Url": "/images/camera.svg"
+  }
+]

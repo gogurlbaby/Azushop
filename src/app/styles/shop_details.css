@@ -1,0 +1,44 @@
+.details-container {
+  padding: 3rem 1rem 5rem;
+}
+
+.product-details-container {
+  margin-top: 3.5rem;
+}
+
+.image-container {
+  padding: 1.5rem;
+}
+
+.tabs-container {
+  margin-top: 4rem;
+  z-index: 0;
+}
+
+.tabs-content-margin {
+  margin-top: 8.5rem;
+}
+
+@media (min-width: 768px) {
+  .tabs-content-margin {
+    margin-top: 2rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .details-container {
+    padding: 5.5rem 2.5rem 9.813rem;
+  }
+
+  .product-details-container {
+    margin-top: 8.125rem;
+  }
+
+  .image-container {
+    padding: 3.625rem 7.5rem;
+  }
+
+  .tabs-container {
+    margin-top: 9.625rem;
+  }
+}
