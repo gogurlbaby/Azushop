@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST="{\"app/components/navbar/NavBar.js -> ./UserDropdown\":{\"id\":\"app/components/navbar/NavBar.js -> ./UserDropdown\",\"files\":[\"static/chunks/_app-pages-browser_src_app_components_navbar_UserDropdown_js.js\"]}}"
