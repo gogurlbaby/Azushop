@@ -14,6 +14,8 @@ import {
   fetchTopProducts,
   fetchNewProducts,
   filterProducts,
+  fetchBrands,
+  fetchRelatedProducts,
 } from "../controllers/productController.js";
 import { authenticate, authorizeAdmin } from "../middlewares/authMiddleware.js";
 import checkId from "../middlewares/checkId.js";
@@ -24,6 +26,8 @@ router
   .post(authenticate, authorizeAdmin, formidable(), addProduct);
 
 router.route("/allproducts").get(fetchAllProducts);
+router.route("/allbrands").get(fetchBrands);
+router.route("/related/:categoryId/:productId").get(fetchRelatedProducts);
 router.route("/:id/reviews").post(authenticate, checkId, addProductReview);
 
 router.get("/top", fetchTopProducts);

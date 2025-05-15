@@ -19,7 +19,7 @@ async function migrateImages() {
 
   const products = await Product.find();
   for (const product of products) {
-    const imageName = product.image.split("/").pop();
+    const imageName = product.image.split("/").pop(); // e.g., computer.svg
     const localPath = path.join(
       "/Users/philiahammond/Desktop/Azushop/frontend/public/images/shop",
       imageName

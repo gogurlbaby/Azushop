@@ -1,5 +1,5 @@
 import asyncHandler from "../middlewares/asyncHandler.js";
-import Product from "../models/productModel.js";
+import Product from "../models/Product.js";
 
 const addProduct = asyncHandler(async (req, res) => {
   try {
@@ -210,6 +210,32 @@ const filterProducts = asyncHandler(async (req, res) => {
   }
 });
 
+const fetchBrands = asyncHandler(async (req, res) => {
+  try {
+    const brands = await Product.distinct("brand");
+    res.json(brands);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch brands" });
+  }
+});
+
+const fetchRelatedProducts = asyncHandler(async (req, res) => {
+  try {
+    const { categoryId, productId } = req.params;
+    const products = await Product.find({
+      category: categoryId,
+      _id: { $ne: productId },
+    })
+      .populate("category")
+      .limit(4)
+      .sort({ createdAt: -1 });
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch related products" });
+  }
+});
+
 export {
   addProduct,
   updateProductDetails,
@@ -221,4 +247,6 @@ export {
   fetchTopProducts,
   fetchNewProducts,
   filterProducts,
+  fetchBrands,
+  fetchRelatedProducts,
 };

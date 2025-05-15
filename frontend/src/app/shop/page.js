@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Banner from "../components/Banner";
+import Image from "next/image";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,19 +22,76 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ShoppingCart, Heart, Eye } from "lucide-react";
-import products from "../json/products.json";
-import categories from "@/app/json/productCategories.json";
-import brands from "@/app/json/productBrands.json";
 import { useCart } from "../context/CartContext";
 import { useRouter } from "next/navigation";
 
 function Shop() {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState([]);
   const [brandSelectOpen, setBrandSelectOpen] = useState(false);
   const [price, setPrice] = useState("");
   const { addToCart, toggleWishlist, wishlist } = useCart();
   const router = useRouter();
+
+  // Fetch products, categories, and brands from API on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch products
+        const productsResponse = await fetch(
+          "http://localhost:5001/api/products/allproducts"
+        );
+        if (!productsResponse.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const productsData = await productsResponse.json();
+        const formattedProducts = productsData.map((product) => ({
+          id: product._id,
+          title: product.name,
+          image: product.image,
+          brand: product.brand,
+          category: product.category.name,
+          description: product.description,
+          price: product.price,
+        }));
+        setProducts(formattedProducts);
+
+        // Fetch categories
+        const categoriesResponse = await fetch(
+          "http://localhost:5001/api/category/categories"
+        );
+        if (!categoriesResponse.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        const categoriesData = await categoriesResponse.json();
+        setCategories(categoriesData);
+
+        // Fetch brands
+        const brandsResponse = await fetch(
+          "http://localhost:5001/api/products/allbrands"
+        );
+        if (!brandsResponse.ok) {
+          throw new Error("Failed to fetch brands");
+        }
+        const brandsData = await brandsResponse.json();
+        setBrands(brandsData);
+
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const filteredProducts = products.filter((product) => {
     const parsedPrice = parseFloat(price);
@@ -62,6 +120,14 @@ function Shop() {
   const viewProduct = (product) => {
     router.push(`/shop/details/${product.id}`);
   };
+
+  if (loading) {
+    return <div>Loading products...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div>
@@ -94,7 +160,7 @@ function Shop() {
         </Breadcrumb>
 
         <div className="lg:flex-row flex flex-col gap-16">
-          {/* Categories  Sidebar */}
+          {/* Categories Sidebar */}
           <div style={{ paddingTop: "5rem" }}>
             <div className="">
               <p className="font-sans text-black text-2xl font-semibold">
@@ -143,7 +209,6 @@ function Shop() {
                           key={idx}
                           className="flex items-center gap-2 px-3 py-1 cursor-pointer"
                           onClick={(e) => {
-                            // Prevent select from closing
                             e.stopPropagation();
                             if (isChecked) {
                               setSelectedBrand((prev) =>
@@ -194,59 +259,64 @@ function Shop() {
 
           {/* Products Display */}
           <div
-            className="xl:grid-cols-4 md:grid-cols-3 grid grid-cols-1 gap-8"
+            className="xl:grid-cols-3 md:grid-cols-2 grid grid-cols-1 gap-8"
             style={{ marginTop: "5rem" }}
           >
-            {filteredProducts.map((product) => (
-              <div
-                className="bg-[#F9FBFC] flex justify-center flex-col items-center rounded-lg border border-solid: border-[#F9FBFC]"
-                style={{ padding: "0.5rem 1rem 1.5rem" }}
-                key={product.id}
-              >
-                <span
-                  className="text-[#01589A] self-end"
-                  style={{ marginTop: "0.5rem" }}
+            {filteredProducts.map((product) => {
+              console.log("Product data:", product);
+              return (
+                <div
+                  className="bg-[#F9FBFC] flex justify-center flex-col items-center rounded-lg border border-solid: border-[#F9FBFC]"
+                  style={{ padding: "0.5rem 1rem 1.5rem" }}
+                  key={product.id}
                 >
-                  {product.brand}
-                </span>
-                <img
-                  src={product.imageUrl}
-                  alt={product.title}
-                  style={{ marginBottom: "1rem" }}
-                />
-                <p className="font-semibold font-sans text-black text-lg text-center">
-                  {product.title}
-                </p>
-                <p className="font-normal font-sans text-black text-base text-center mb-2">
-                  {product.description}
-                </p>
-                <span
-                  className="text-[#01589A] font-semibold text-base text-center"
-                  style={{ marginBottom: "1rem" }}
-                >
-                  ${product.price}
-                </span>
-                <div className="flex gap-2" style={{ marginTop: "2rem" }}>
-                  <ShoppingCart
-                    className="cursor-pointer hover:text-blue-700"
-                    onClick={() => addToCart(product, 1)}
+                  <span
+                    className="text-[#01589A] self-end"
+                    style={{ marginTop: "0.5rem" }}
+                  >
+                    {product.brand}
+                  </span>
+                  <Image
+                    src={product.image}
+                    alt={product.title}
+                    width={200}
+                    height={200}
+                    style={{ marginBottom: "1rem" }}
                   />
+                  <p className="font-semibold font-sans text-black text-lg text-center">
+                    {product.title}
+                  </p>
+                  <p className="font-normal font-sans text-black text-base text-center mb-2">
+                    {product.description}
+                  </p>
+                  <span
+                    className="text-[#01589A] font-semibold text-base text-center"
+                    style={{ marginBottom: "1rem" }}
+                  >
+                    ${product.price}
+                  </span>
+                  <div className="flex gap-2" style={{ marginTop: "2rem" }}>
+                    <ShoppingCart
+                      className="cursor-pointer hover:text-blue-700"
+                      onClick={() => addToCart(product, 1)}
+                    />
 
-                  <Heart
-                    className={`cursor-pointer ${
-                      wishlist.some((item) => item.id === product.id)
-                        ? "text-red-500"
-                        : "hover:text-red-500"
-                    }`}
-                    onClick={() => toggleWishlist(product)}
-                  />
-                  <Eye
-                    className="cursor-pointer  hover:text-green-600"
-                    onClick={() => viewProduct(product)}
-                  />
+                    <Heart
+                      className={`cursor-pointer ${
+                        wishlist.some((item) => item.id === product.id)
+                          ? "text-red-500"
+                          : "hover:text-red-500"
+                      }`}
+                      onClick={() => toggleWishlist(product)}
+                    />
+                    <Eye
+                      className="cursor-pointer hover:text-green-600"
+                      onClick={() => viewProduct(product)}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

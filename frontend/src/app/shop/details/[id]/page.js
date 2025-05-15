@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import products from "@/app/json/products.json";
+import { useRouter, useParams } from "next/navigation";
 import { useCart } from "../../../context/CartContext";
 import {
   Breadcrumb,
@@ -23,30 +22,89 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import "../../../styles/shop_details.css";
 
-function ProductDetails({ params }) {
-  // Get the id from params instead of router.query
-  const { id } = React.use(params);
+function ProductDetails() {
+  const { id } = useParams();
   const { addToCart, toggleWishlist, wishlist } = useCart();
   const router = useRouter();
 
   const [product, setProduct] = useState(null);
+  const [categoryName, setCategoryName] = useState("");
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [quantity, setQuantity] = useState("1");
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [reviews, setReviews] = useState([]);
   const [reviewerName, setReviewerName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // Fetch product data, category name, and related products from API
   useEffect(() => {
-    if (id) {
-      const foundProduct = products.find(
-        (product) => product.id === parseInt(id)
-      );
-      setProduct(foundProduct);
-      console.log("Product loaded", {
-        foundProduct,
-        inStock: foundProduct?.inStock,
-      });
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
 
+        // Fetch product
+        const productResponse = await fetch(
+          `http://localhost:5001/api/products/${id}`
+        );
+        if (!productResponse.ok) {
+          throw new Error("Failed to fetch product");
+        }
+        const productData = await productResponse.json();
+        const productFormatted = {
+          id: productData._id,
+          title: productData.name,
+          image: productData.image,
+          brand: productData.brand,
+          categoryId: productData.category, // Store category ID
+          description: productData.description,
+          price: productData.price,
+          inStock: productData.quantity > 0 ? "In Stock" : "Out of Stock",
+        };
+        setProduct(productFormatted);
+
+        // Fetch category name
+        const categoryResponse = await fetch(
+          `http://localhost:5001/api/category/${productData.category}`
+        );
+        if (!categoryResponse.ok) {
+          throw new Error("Failed to fetch category");
+        }
+        const categoryData = await categoryResponse.json();
+        setCategoryName(categoryData.name);
+
+        // Fetch related products
+        const relatedResponse = await fetch(
+          `http://localhost:5001/api/products/related/${productData.category}/${id}`
+        );
+        if (!relatedResponse.ok) {
+          throw new Error("Failed to fetch related products");
+        }
+        const relatedData = await relatedResponse.json();
+        const relatedFormatted = relatedData.map((item) => ({
+          id: item._id,
+          title: item.name,
+          image: item.image,
+          brand: item.brand,
+          category: item.category.name,
+          description: item.description,
+          price: item.price,
+          inStock: item.quantity > 0 ? "In Stock" : "Out of Stock",
+        }));
+        setRelatedProducts(relatedFormatted);
+
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProduct();
+
+      // Load reviews from localStorage
       const storedReviews = localStorage.getItem(`reviews_${id}`);
       if (storedReviews) {
         setReviews(JSON.parse(storedReviews));
@@ -54,19 +112,18 @@ function ProductDetails({ params }) {
     }
   }, [id]);
 
+  // Save reviews to localStorage when they change
   useEffect(() => {
     if (id && reviews.length > 0) {
       localStorage.setItem(`reviews_${id}`, JSON.stringify(reviews));
     }
   }, [reviews, id]);
 
-  if (!product) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!product) return <div>Product not found</div>;
 
-  // Parsed inStock string here
-  const isInStock = product.inStock
-    ? product.inStock.toLowerCase().includes("in stock")
-    : true;
-
+  const isInStock = product.inStock.toLowerCase().includes("in stock");
   const totalPrice = (product.price * parseInt(quantity, 10)).toFixed(2);
 
   const handleSubmitReview = () => {
@@ -117,7 +174,7 @@ function ProductDetails({ params }) {
           </BreadcrumbSeparator>
           <BreadcrumbItem>
             <BreadcrumbPage className="text-black font-bold font-sans text-xl">
-              {product.category}
+              {categoryName}
             </BreadcrumbPage>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
@@ -133,7 +190,7 @@ function ProductDetails({ params }) {
 
       <div className="product-details-container lg:flex-row flex flex-col gap-8">
         <div className="image-container bg-[#F9FBFC] rounded-xs">
-          <img src={product.imageUrl} alt={product.title} className="w-full" />
+          <img src={product.image} alt={product.title} className="w-full" />
         </div>
         <div>
           <div className="flex gap-16 mb-8">
@@ -224,12 +281,12 @@ function ProductDetails({ params }) {
 
           <TabsContent value="related">
             <div className="tabs-content-margin md:flex-row flex flex-col gap-4 overflow-x-auto">
-              {products
-                .filter(
-                  (p) => p.category === product.category && p.id !== product.id
-                )
-                .slice(0, 4)
-                .map((relatedProduct) => (
+              {relatedProducts.length === 0 ? (
+                <p className="text-lg text-black">
+                  No related products available.
+                </p>
+              ) : (
+                relatedProducts.map((relatedProduct) => (
                   <div
                     key={relatedProduct.id}
                     className="bg-[#F9FBFC] flex flex-col justify-center items-center rounded-lg border border-solid border-[#F9FBFC] min-w-[200px]"
@@ -242,12 +299,10 @@ function ProductDetails({ params }) {
                       {relatedProduct.brand}
                     </span>
                     <img
-                      src={relatedProduct.imageUrl}
+                      src={relatedProduct.image}
                       alt={relatedProduct.title}
                       style={{ marginBottom: "1rem", cursor: "pointer" }}
-                      onClick={() =>
-                        router.push(`/shop/details/${relatedProduct.id}`)
-                      }
+                      onClick={() => viewProduct(relatedProduct)}
                     />
                     <p className="font-semibold">{relatedProduct.title}</p>
                     <p className="font-normal text-center">
@@ -278,7 +333,8 @@ function ProductDetails({ params }) {
                       />
                     </div>
                   </div>
-                ))}
+                ))
+              )}
             </div>
           </TabsContent>
 
