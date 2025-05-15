@@ -14,7 +14,6 @@ import webhookRoutes from "./routes/webhookRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import cors from "cors";
 import cloudinary from "cloudinary";
-import cors from "cors";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
