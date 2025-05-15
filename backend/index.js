@@ -14,6 +14,7 @@ import webhookRoutes from "./routes/webhookRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import cors from "cors";
 import cloudinary from "cloudinary";
+import cors from "cors";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -31,7 +32,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://azushop.vercel.app/"],
+    credentials: true,
+  })
+);
 
 app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
