@@ -41,13 +41,13 @@ function ProductDetails() {
   // Fetch product data, category name, and related products from API
   useEffect(() => {
     const fetchProduct = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
       try {
         setLoading(true);
 
         // Fetch product
-        const productResponse = await fetch(
-          `http://localhost:5001/api/products/${id}`
-        );
+        const productResponse = await fetch(`${apiUrl}/api/products/${id}`);
+
         if (!productResponse.ok) {
           throw new Error("Failed to fetch product");
         }

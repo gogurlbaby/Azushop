@@ -41,13 +41,15 @@ function Shop() {
   // Fetch products, categories, and brands from API on component mount
   useEffect(() => {
     const fetchData = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
       try {
         setLoading(true);
 
         // Fetch products
         const productsResponse = await fetch(
-          "http://localhost:5001/api/products/allproducts"
+          `${apiUrl}/api/products/allproducts`
         );
+
         if (!productsResponse.ok) {
           throw new Error("Failed to fetch products");
         }
