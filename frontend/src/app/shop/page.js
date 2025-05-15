@@ -67,7 +67,7 @@ function Shop() {
 
         // Fetch categories
         const categoriesResponse = await fetch(
-          "http://localhost:5001/api/category/categories"
+          `${apiUrl}/api/category/categories`
         );
         if (!categoriesResponse.ok) {
           throw new Error("Failed to fetch categories");
@@ -76,9 +76,7 @@ function Shop() {
         setCategories(categoriesData);
 
         // Fetch brands
-        const brandsResponse = await fetch(
-          "http://localhost:5001/api/products/allbrands"
-        );
+        const brandsResponse = await fetch(`${apiUrl}/api/products/allbrands`);
         if (!brandsResponse.ok) {
           throw new Error("Failed to fetch brands");
         }

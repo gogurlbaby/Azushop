@@ -66,7 +66,7 @@ function ProductDetails() {
 
         // Fetch category name
         const categoryResponse = await fetch(
-          `http://localhost:5001/api/category/${productData.category}`
+          `${apiUrl}/api/category/${productData.category}`
         );
         if (!categoryResponse.ok) {
           throw new Error("Failed to fetch category");
@@ -76,7 +76,7 @@ function ProductDetails() {
 
         // Fetch related products
         const relatedResponse = await fetch(
-          `http://localhost:5001/api/products/related/${productData.category}/${id}`
+          `${apiUrl}/api/products/related/${productData.category}/${id}`
         );
         if (!relatedResponse.ok) {
           throw new Error("Failed to fetch related products");
