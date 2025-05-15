@@ -1,6 +1,6 @@
 import paystack from "../config/paystack.js";
 import Order from "../models/orderModel.js";
-import Product from "../models/productModel.js";
+import Product from "../models/Product.js";
 
 // Utility Function
 function calcPrices(orderItems) {

@@ -56,8 +56,8 @@ const removeCategory = asyncHandler(async (req, res) => {
 
 const listCategory = asyncHandler(async (req, res) => {
   try {
-    const all = await Category.find({});
-    res.json(all);
+    const all = await Category.find({}, "name"); // Fetch only the name field
+    res.json(all.map((category) => category.name)); // Return array of names
   } catch (error) {
     console.log(error);
     return res.status(400).json(error.message);
